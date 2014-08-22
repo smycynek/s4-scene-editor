@@ -21,14 +21,20 @@
   width:48%;
   padding-left:5px;
   padding-right:5px;
-  height:600px;
+
   display:block;
   float:left;
 }
 
+
 h1,h2,h3,h4,h5,h6,td,th,p,div,li,body
 {
   background-color:#f2f2f2;
+}
+
+
+p.clear {
+    clear: both;
 }
 
  </style>
@@ -53,18 +59,27 @@ h1,h2,h3,h4,h5,h6,td,th,p,div,li,body
   <p>Note:  Requires Chrome or later versions of IE -- not tested on other browsers. </p>
   <p><a href="https://github.com/smycynek/s4-scene-editor">https://github.com/smycynek/s4-scene-editor</a></p>
 
-  <input class="standalone" ng-show="!fastCamera" type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
-  <input  class="standalone"  ng-show="fastCamera" type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
-  <input class="standalone"  ng-show="continueRender" type="button" ng-click = "stop()"  value="Stop Render"></input> 
-  <input class="standalone"  ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input> 
-  <div  class="standalone" >
-   <label for="rotation">Object Rotation Speed</label><input    type="number" name="rotation" min="1" max="20" ng-model = "rotation">
- </div>
+  <input ng-show="!fastCamera" type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
+  <input   ng-show="fastCamera" type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
+  <input  ng-show="continueRender" type="button" ng-click = "stop()"  value="Stop Render"></input> 
+  <input  ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input> 
+
+<div class = "standalone">
+   <span>Object Rotation Speed</span>
+   <input style="width: 75px" type="range" name="rotation" min="1" max="20" step="1" ng-model = "rotation">
+</div>
  <div class="standalone">
   <a href="./js/shapes.json">Default Scene Source JSON</a>
 </div>
 
-<div>
+
+
+</div>
+
+<div class="alignedContent" id="RenderWindow"></div>
+
+<p class="clear"/>
+<div class="standalone">
 <h2>Scene Code Editor (Must be valid JSON)</h2>
 <p>Examples:</p>
 <ul>
@@ -73,19 +88,15 @@ h1,h2,h3,h4,h5,h6,td,th,p,div,li,body
   <li>  Adding another "Box," "Cylinder," or "Cone" object with position, dimension, and color properties to the
     end of the JSON array.</li>
 </ul>
-<div class="standalone">
- <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="8" style="width:100%" placeholder="Your S4 code" >
+
+<div>
+ <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="4" style="width:100%" placeholder="Your S4 code" >
  </textarea>
  
  <button type="button" ng-click="refreshJsonText()" >Refresh Sample Code from Server</button>
  <button type="button" ng-click="updateRender()" >Update Model with your code in the editor</button>
 </div>
 </div>
-
-</div>
-
-<div class="alignedContent" id="RenderWindow"></div>
-
 
 </body>
 </html>
