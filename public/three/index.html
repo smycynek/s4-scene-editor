@@ -1,0 +1,91 @@
+<html ng-app = "threeNgApp">
+<head>
+  <title>S4 Scene editor - Angular and ThreeJS demo</title>
+  <style>canvas { width: 100%; height: 100% }</style>
+  <script src="js/three.min.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="js/scene.js"></script>
+
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"></link>
+  <style>
+  .standalone
+  {
+    display: block;
+  }
+  .sourcecode
+  {
+   font-family:"Lucida Console", Monaco, monospace; color: blue; font-size:medium;
+ }
+ .alignedContent
+  {
+  width:48%;
+  padding-left:5px;
+  padding-right:5px;
+  height:600px;
+  display:block;
+  float:left;
+}
+
+h1,h2,h3,h4,h5,h6,td,th,p,div,li,body
+{
+  background-color:#f2f2f2;
+}
+
+ </style>
+ <script>
+
+ </script>
+</head>
+<h1>S4 Scene Editor - Angular and ThreeJS demo</h1>
+
+<body ng-controller="RenderCtrl" ng-init"doc=document" data-ng-init="mainRender()">
+  <div class="alignedContent">
+  <p>
+    This demo shows:
+    <ol>
+      <li>AngularJS binding for commands and data input</li> 
+      <li>AngularJS async ajax-like JSON resource retrieval</li>
+      <li>JSON parsing (Using S4 -- "Steve's Super Simple Scene Format")</li>
+      <li>Three.JS animation</li>
+      <li>Live scene editing</li>
+    </ol>
+  </p>
+  <p>Note:  Requires Chrome or later versions of IE -- not tested on other browsers. </p>
+  <p><a href="https://git.autodesk.com/mycynes/Angular-ThreeJs">https://git.autodesk.com/mycynes/Angular-ThreeJs</a></p>
+
+  <input class="standalone" ng-show="!fastCamera" type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
+  <input  class="standalone"  ng-show="fastCamera" type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
+  <input class="standalone"  ng-show="continueRender" type="button" ng-click = "stop()"  value="Stop Render"></input> 
+  <input class="standalone"  ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input> 
+  <div  class="standalone" >
+   <label for="rotation">Object Rotation Speed</label><input    type="number" name="rotation" min="1" max="20" ng-model = "rotation">
+ </div>
+ <div class="standalone">
+  <a href="./js/shapes.json">Default Scene Source JSON</a>
+</div>
+
+<div>
+<h2>Scene Code Editor (Must be valid JSON)</h2>
+<p>Examples:</p>
+<ul>
+  <li>  Try editing the hex values for colors to some other hex value, e.g. 0x236581 </li>
+  <li>  Replace "Cylinder" with "Cone" and change "Height" from 1 to 2 </li>
+  <li>  Adding another "Box," "Cylinder," or "Cone" object with position, dimension, and color properties to the
+    end of the JSON array.</li>
+</ul>
+<div class="standalone">
+ <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="8" style="width:100%" placeholder="Your S4 code" >
+ </textarea>
+ 
+ <button type="button" ng-click="refreshJsonText()" >Refresh Sample Code from Server</button>
+ <button type="button" ng-click="updateRender()" >Update Model with your code in the editor</button>
+</div>
+</div>
+
+</div>
+
+<div class="alignedContent" id="RenderWindow"></div>
+
+
+</body>
+</html>
