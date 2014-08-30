@@ -1,0 +1,108 @@
+{ 
+"ShapeList": [ 
+
+{ 
+"Type" : "Plane", 
+ "Data" : { 
+   "Position" : {
+      "X":0, 
+      "Y":-0.3, 
+      "Z":0   
+   },
+      "Rotation" : {
+      "X":1.5,
+      "Y":0,
+      "Z":0
+   },
+   "Color": "0x982233",
+   "Parameters" : {
+   "Width": 6, 
+   "Height": 6  
+   }
+ }  
+},
+{ 
+"Type" : "Box", 
+ "Data" : { 
+   "Position" : 
+   {
+      "X":1, 
+      "Y":0.1, 
+      "Z":1
+   },
+   "Rotation" : 
+   {
+      "X":0,
+      "Y":0,
+      "Z":0
+   },
+   "Color": "0x223399",
+   "Parameters" :
+   {
+   "Length": 2.25, 
+   "Width": 0.1, 
+   "Depth": 2.25
+   }
+ } 
+},
+{
+"Type" : "Extrusion",
+"Data" : {
+   "Position" : {
+      "X":0, 
+      "Y":0.5, 
+      "Z":0   
+   },
+      "Rotation" : {
+      "X":1.5,
+      "Y":0,
+      "Z":0
+   },
+   "Color": "0x44aa11",
+   "Parameters" : {
+   "Depth": 0.5, 
+   "Profile" : 
+      [
+      [0,0],
+      [2,0], 
+      [2,2],
+      [1.9,2],
+      [1.9,0.1],
+      [0.1,0.1],
+      [0.1,2],
+      [0.0,2]
+      ]
+   }
+} 
+},
+{
+"Type" : "Extrusion",
+"Data" : {
+   "Position" : {
+      "X":0.5, 
+      "Y":0.2, 
+      "Z":0.1   
+   },
+      "Rotation" : {
+      "X":1.5,
+      "Y":0,
+      "Z":0
+   },
+   "Color": "0xaa4411",
+   "Parameters" : {
+   "Depth": 0.3, 
+   "Profile" : 
+      [
+      [0,0],
+      [1,0], 
+      [1,1],
+      [0.9,1],
+      [0.9,0.1],
+      [0.1,0.1],
+      [0.1,1],
+      [0.0,1]
+      ]
+   }
+} 
+}    
+]}

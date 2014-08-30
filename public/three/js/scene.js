@@ -1,6 +1,9 @@
 
 var threeNgApp = angular.module("threeNgApp", []);
 
+
+
+
 threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Bind UI controls
     $scope.setFast = function () { $scope.fastCamera = true; $scope.increment = $scope.bigIncrement; };
@@ -8,7 +11,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     $scope.bigIncrement = .01;
     $scope.smallIncrement = .003;
     $scope.increment = $scope.smallIncrement;
-    $scope.rotation = 10;
+    $scope.rotation = 0;
     $scope.continueRender = true;
     $scope.fastCamera = false;
     $scope.count = 0;
@@ -17,12 +20,37 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     $scope.start = function () { $scope.continueRender = true; }
 
     //Create color values from RGB inputs or hex strings
-    $scope.color = function (red, blue, green) {
+    $scope.colorT = function (red, blue, green) {
         this.color = (green) + (blue << 8) + (red << 16);
     };
 
+
     $scope.color = function (hexValue) {
         this.color = parseInt(hexValue);
+    };
+
+
+$scope.scaleColor = function(color, scale) {
+  var red;
+  var blue;
+  var green;
+
+  red =   (color.color & 0xff0000) >> 16;
+  green = (color.color & 0x00ff00) >>8;
+  blue =  (color.color & 0x0000ff);
+
+
+  return new $scope.colorT(Math.floor(red*scale), Math.floor(blue*scale), Math.floor(green*scale));
+};
+    $scope.basicInit = function(geometry, jsonParameters) {
+        geometry.position.x = jsonParameters.Position.X;
+        geometry.position.y = jsonParameters.Position.Y;
+        geometry.position.z = jsonParameters.Position.Z;
+        geometry.rotation.x = jsonParameters.Rotation.X;
+        geometry.rotation.y = jsonParameters.Rotation.Y;
+        geometry.rotation.z = jsonParameters.Rotation.Z;
+        geometry.castShadow = true;
+        geometry.receiveShadow = true;
     };
 
     //Make a box with given dimensions and color with simple shaded material
@@ -32,13 +60,56 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         return new THREE.Mesh(geometry, material);
     };
 
-    //Make a box from SSSSF JSON data 
+    //Make a box from S4F JSON data 
     $scope.makeBoxFromJson = function (jsonItem) {
-        var box = $scope.makeBox(jsonItem.Data.Length, jsonItem.Data.Width, jsonItem.Data.Depth, new $scope.color(jsonItem.Data.Color));
-        box.position.x = jsonItem.Data.X;
-        box.position.y = jsonItem.Data.Y;
-        box.position.z = jsonItem.Data.Z;
-        return box;
+        var geometry = $scope.makeBox(jsonItem.Data.Parameters.Length, jsonItem.Data.Parameters.Width, jsonItem.Data.Parameters.Depth, new $scope.color(jsonItem.Data.Color));
+        $scope.basicInit(geometry, jsonItem.Data);
+        return geometry;
+    };
+
+    $scope.makeExtrusion = function(profile, depth, color)
+    {
+
+     var shapePoints = [];
+           
+      profile.forEach(function (item) {
+               shapePoints.push(new THREE.Vector2(item[0], item[1]));
+        });
+        var extrusionSettings = {
+          amount: depth,
+          curveSegmentss: 1,
+          bevelThickness: 1,
+          bevelSize: 0,
+          bevelEnabled: false,
+          material:1,
+          extrudeMaterial:1
+        };
+
+        var shape = new THREE.Shape(shapePoints);
+        var geometry = new THREE.ExtrudeGeometry(shape, extrusionSettings);
+        var material = $scope.makeMaterial(color);
+        return new THREE.Mesh(geometry, material);
+ 
+    };
+
+    $scope.makeExtrusionFromJson = function(jsonItem) {
+        var geometry = $scope.makeExtrusion(jsonItem.Data.Parameters.Profile, jsonItem.Data.Parameters.Depth, new $scope.color(jsonItem.Data.Color));
+        $scope.basicInit(geometry, jsonItem.Data);
+        return geometry;  
+    };
+    //Make a box with given dimensions and color with simple shaded material
+    $scope.makePlane = function (width, height, color) {
+        var geometry = new THREE.PlaneGeometry(width, height,2,2);
+        var material = $scope.makeMaterial(color);
+        return new THREE.Mesh(geometry, material);
+    };
+
+    //Make a box from S4F JSON data 
+    $scope.makePlaneFromJson = function (jsonItem) {
+        var geometry = $scope.makePlane(jsonItem.Data.Parameters.Width, jsonItem.Data.Parameters.Height, new $scope.color(jsonItem.Data.Color));
+        $scope.basicInit(geometry, jsonItem.Data);
+        geometry.skipRotate = true;
+        return geometry;
     };
 
     //Same as for box, but for cylinder
@@ -50,11 +121,9 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 
     //Same as for box, but for cylinder
     $scope.makeCylinderFromJson = function (jsonItem) {
-        var cylinder = $scope.makeCylinder(jsonItem.Data.Radius, jsonItem.Data.Radius, jsonItem.Data.Height, 40, 40, false, new $scope.color(jsonItem.Data.Color));
-        cylinder.position.x = jsonItem.Data.X;
-        cylinder.position.y = jsonItem.Data.Y;
-        cylinder.position.z = jsonItem.Data.Z;
-        return cylinder;
+        var geometry = $scope.makeCylinder(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, new $scope.color(jsonItem.Data.Color));
+         $scope.basicInit(geometry, jsonItem.Data);
+        return geometry;
     };
 
     //Same as for box, but for cone
@@ -66,23 +135,22 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 
     //Same as for box, but for cone
     $scope.makeConeFromJson = function (jsonItem) {
-        var cone = $scope.makeCone(jsonItem.Data.Radius, jsonItem.Data.Height, 40, 40, false, new $scope.color(jsonItem.Data.Color));
-        cone.position.x = jsonItem.Data.X;
-        cone.position.y = jsonItem.Data.Y;
-        cone.position.z = jsonItem.Data.Z;
-        return cone;
+        var geometry = $scope.makeCone(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, new $scope.color(jsonItem.Data.Color));
+        $scope.basicInit(geometry, jsonItem.Data);
+        return geometry;
     };
 
     //Make a simple shaded material to show basic highlights of a given color.
-    $scope.makeMaterial = function (colorValue) {
+    $scope.makeMaterial = function (color) {
         return new THREE.MeshPhongMaterial({
             // light
-            specular: colorValue.color,
+            specular: $scope.scaleColor(color, 1.05).color,
             // intermediate
-            color: colorValue.color,
+            color: color.color,
             // dark
-            emissive: colorValue.color,
-            shininess: 160
+            emissive: $scope.scaleColor(color, .95).color,
+            shininess: 160,
+            side : THREE.DoubleSide
         })
     };
 
@@ -93,18 +161,28 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
   };
 
 
+    //Refresh JSON scene from server and place in web-page text view.
+    $scope.refreshJsonText = function() 
+    {
+    //Get JSON S4F data containing geometry and textures
+    $http({ method: 'GET', url: '/three/js/shapes.json' }).success(function (sceneJsonParsed, status, headers, config) {
+        $scope.currentJson =JSON.stringify(sceneJsonParsed);
+        $scope.updateRender();
+    })};
+
 //Refresh JSON scene from server and place in web-page text view.
-$scope.refreshJsonText = function() 
+$scope.refreshJsonTextRoom = function() 
 {
   //Get JSON S4F data containing geometry and textures
-  $http({ method: 'GET', url: '/three/js/shapes.json' }).success(function (sceneJsonParsed, status, headers, config) {
+  $http({ method: 'GET', url: '/three/js/rooms.json' }).success(function (sceneJsonParsed, status, headers, config) {
     $scope.currentJson =JSON.stringify(sceneJsonParsed);
+    $scope.updateRender();
 
 })};
 
-///Update the scene with the json text in the web-page text view.
-$scope.updateRender = function() 
-{
+    ///Update the scene with the json text in the web-page text view.
+    $scope.updateRender = function() 
+    {
 
             //Add items to scene
             $scope.sceneItems.forEach(function (item) {
@@ -129,11 +207,12 @@ $scope.updateRender = function()
                         $scope.sceneItems.forEach(function (item) {
                             $scope.scene.add(item);
                         });
-                    };
+                    }; 
 
                     $scope.makeRenderer = function() {
 
                         var renderer = new THREE.WebGLRenderer();
+                        renderer.shadowMapEnabled = true;
                         renderer.setSize(window.innerWidth / 3, window.innerHeight / 3);
                         document.getElementById("RenderWindow").appendChild(renderer.domElement);
            if ($scope.continueRender == false)
@@ -148,7 +227,12 @@ $scope.updateRender = function()
 
             // Simple directional lighting, just to show some highlights
             var directionalLight = new THREE.DirectionalLight(0xffffff);
-            directionalLight.position.set(1, 2, 1).normalize();
+                directionalLight.position.set(1, 0, 1).normalize();
+                directionalLight.castShadow = true;
+                directionalLight.shadowCameraNear = 0.1;
+                directionalLight.shadowCameraFar = 5;
+      
+
             scene.add(directionalLight);
             return scene;
         };
@@ -170,6 +254,14 @@ $scope.updateRender = function()
                     var cone = $scope.makeConeFromJson(item);
                     sceneItems.push(cone);
                     break;
+                    case "Plane":
+                    var aplane = $scope.makePlaneFromJson(item);
+                    aplane.name="theplane";
+                    sceneItems.push(aplane);
+                    break;
+                    case "Extrusion":
+                    var anextrusion = $scope.makeExtrusionFromJson(item);
+                    sceneItems.push(anextrusion);
                     default:
                 }
             });
@@ -183,21 +275,18 @@ $scope.updateRender = function()
             return;
                 //Rotate each item in the scene a bit in each frame
                 $scope.sceneItems.forEach(function (item) {
+                    if (!item.skipRotate) {
                     item.rotation.x += $scope.rotation / 500;
                     item.rotation.y += $scope.rotation / 1000;
+                }
                 });
                 //Orbit the camera around the items in the scene a bit each frame.
-                if ($scope.direction)
-                    $scope.camera.rotation.y += $scope.increment;
-                else
-                    $scope.camera.rotation.y -= $scope.increment;
-                $scope.count += 1;
-
-                if ($scope.count == 100) {
-                    $scope.count = 0;
-                    $scope.direction = !$scope.direction;
-                }
-                $scope.renderer.render($scope.scene, $scope.camera);
+            
+               $scope.camera.position.y = 2;
+               $scope.camera.position.x = $scope.camera.position.x * Math.cos($scope.increment) + $scope.camera.position.z * Math.sin($scope.increment);
+               $scope.camera.position.z = $scope.camera.position.z * Math.cos($scope.increment) - $scope.camera.position.x * Math.sin($scope.increment);
+               $scope.camera.lookAt($scope.scene.position);
+               $scope.renderer.render($scope.scene, $scope.camera);
 
             };
 

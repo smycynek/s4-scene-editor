@@ -7,40 +7,7 @@
   <script src="js/scene.js"></script>
 
   <link rel="stylesheet" href="./styles/bootstrap.min.css"></link>
-  <style>
-  .standalone
-  {
-    display: block;
-  }
-  .sourcecode
-  {
-   font-family:"Lucida Console", Monaco, monospace; color: blue; font-size:medium;
- }
- .alignedContent
-  {
-  width:48%;
-  padding-left:5px;
-  padding-right:5px;
 
-  display:block;
-  float:left;
-}
-
-
-h1,h2,h3,h4,h5,h6,td,th,p,div,li,body
-{
-  background-color:#f2f2f2;
-}
-
-
-p.clear {
-    clear: both;
-}
-
- </style>
- <script>
-
- </script>
 </head>
 <h1>S4 Scene Editor - Angular and ThreeJS demo</h1>
 <h2>Requires desktop browser -- Chrome, FireFox, or IE11</h2>
@@ -66,10 +33,13 @@ p.clear {
 
 <div class = "standalone">
    <span>Object Rotation Speed</span>
-   <input style="width: 75px" type="range" name="rotation" min="1" max="20" step="1" ng-model = "rotation">
+   <input style="width: 75px" type="range" name="rotation" min="-20" max="20" step="1" ng-model = "rotation">
 </div>
  <div class="standalone">
   <a href="./js/shapes.json">Default Scene Source JSON</a>
+</div>
+ <div class="standalone">
+  <a href="./js/rooms.json">Room Scene Source JSON</a>
 </div>
 
 
@@ -93,8 +63,10 @@ p.clear {
  <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="4" style="width:100%" placeholder="Your S4 code" >
  </textarea>
  
- <button type="button" ng-click="refreshJsonText()" >Refresh Sample Code from Server</button>
- <button type="button" ng-click="updateRender()" >Update Model with your code in the editor</button>
+ <button type="button" ng-click="refreshJsonText()" >Refresh Default sample</button>
+  <button type="button" ng-click="refreshJsonTextRoom()" >Refresh Room sample</button>
+
+ <button type="button" ng-click="updateRender()" >Update Model with your code</button>
 </div>
 </div>
 
