@@ -10,11 +10,11 @@
 
 </head>
 <h1>S4 Scene Editor - Angular and ThreeJS demo</h1>
-<h2>Requires desktop browser -- Chrome, FireFox, or IE11</h2>
+<h2>Requires desktop browser -- Chrome, FireFox, or IE11 (IE has issues)</h2>
 <body ng-controller="RenderCtrl" ng-init"doc=document" data-ng-init="mainRender()">
   <div class="alignedContent">
-  <p>
-    This demo shows:
+<details>
+  <summary>Demo features</summary>
     <ol>
       <li>AngularJS binding for commands and data input</li> 
       <li>AngularJS async ajax-like JSON resource retrieval</li>
@@ -22,25 +22,24 @@
       <li>Three.JS animation</li>
       <li>Live scene editing</li>
     </ol>
-  </p>
+  </details>
 
-  <p><a href="https://github.com/smycynek/s4-scene-editor">https://github.com/smycynek/s4-scene-editor</a></p>
 
+  <details>
+    <summary>Controls</summary>
   <input ng-show="!fastCamera" type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
   <input   ng-show="fastCamera" type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
   <input  ng-show="continueRender" type="button" ng-click = "stop()"  value="Stop Render"></input> 
   <input  ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input> 
 
-<div class = "standalone">
+
    <span>Object Rotation Speed</span>
-   <input style="width: 75px" type="range" name="rotation" min="-20" max="20" step="1" ng-model = "rotation">
-</div>
- <div class="standalone">
-  <a href="./js/shapes.json">Default Scene Source JSON</a>
-</div>
- <div class="standalone">
-  <a href="./js/rooms.json">Room Scene Source JSON</a>
-</div>
+   <input style="width: 75px; display:inline" type="range" name="rotation" min="-20" max="20" step="1" ng-model = "rotation">
+   <input type ="button" value="Clear rotation" ng-click="clearRotation()"></input>
+
+
+</details>
+
 
 
 
@@ -51,24 +50,28 @@
 <p class="clear"/>
 <div class="standalone">
 <h2>Scene Code Editor (Must be valid JSON)</h2>
-<p>Examples:</p>
+<details>
+<summary>Try these edits...</summary>
 <ul>
   <li>  Try editing the hex values for colors to some other hex value, e.g. 0x236581 </li>
   <li>  Replace "Cylinder" with "Cone" and change "Height" from 1 to 2 </li>
   <li>  Adding another "Box," "Cylinder," or "Cone" object with position, dimension, and color properties to the
     end of the JSON array.</li>
 </ul>
-
+</details>
 <div>
  <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="4" style="width:100%" placeholder="Your S4 code" >
  </textarea>
- 
- <button type="button" ng-click="refreshJsonText()" >Refresh Default sample</button>
-  <button type="button" ng-click="refreshJsonTextRoom()" >Refresh Room sample</button>
-
+  <button type="button" ng-click="showRoomScene()" >Show Room sample</button> 
+  <button type="button" ng-click="showGeneralScene()" >Show general sample</button>
  <button type="button" ng-click="updateRender()" >Update Model with your code</button>
 </div>
 </div>
-
+<h2>Source</h2>
+ <div class="standalone">
+  <a href="./data/rooms.json">Room Scene</a> |
+  <a href="./data/shapes.json">General Scene</a> 
+</div>
+  <p><a href="https://github.com/smycynek/s4-scene-editor">https://github.com/smycynek/s4-scene-editor</a></p>
 </body>
 </html>
