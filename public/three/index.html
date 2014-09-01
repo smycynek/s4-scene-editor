@@ -1,70 +1,72 @@
 <html ng-app = "threeNgApp">
 <head>
-  <title>S4 Scene editor - Angular and ThreeJS demo</title>
+  <title>S4F Scene editor - Angular and ThreeJS demo</title>
   <style>canvas { width: 100%; height: 100% }</style>
+  <script src="jquery-ui-1.11.1/external/jquery/jquery.js"></script>
+  <script src="jquery-ui-1.11.1/jquery-ui.js"></script>
   <script src="js/three.min.js"></script>
   <script src="js/angular.min.js"></script>
   <script src="js/scene.js"></script>
 
   <link rel="stylesheet" href="./styles/bootstrap.min.css"></link>
 
+  <link rel="stylesheet" href="./jquery-ui-1.11.1/jquery-ui.css"></link>
+  <script>
+  $(function() {
+    $( ".accordion" ).accordion({
+      collapsible: true, active: false
+    });
+  });
+  </script>
 </head>
-<h1>S4 Scene Editor - Angular and ThreeJS demo</h1>
-<h2>Requires desktop browser -- Chrome, FireFox, or IE11 (IE has issues)</h2>
+<h2>S4F Scene Editor</h2>
+<p>Requires desktop browser -- Chrome, FireFox, or IE11 (IE has issues with range control --WIP)</p>
 <body ng-controller="RenderCtrl" ng-init"doc=document" data-ng-init="mainRender()">
-  <div class="alignedContent">
-<details>
-  <summary>Demo features</summary>
+<div class="alignedContent">
+<div class="accordion">
+  <h1>Demo features</h1>
     <ol>
       <li>AngularJS binding for commands and data input</li> 
       <li>AngularJS async ajax-like JSON resource retrieval</li>
-      <li>JSON parsing (Using S4 -- "Steve's Super Simple Scene Format")</li>
+      <li>JSON parsing (Using S4F -- "Steve's Super Simple Scene Format")</li>
       <li>Three.JS animation</li>
       <li>Live scene editing</li>
     </ol>
-  </details>
-
-
-  <details>
-    <summary>Controls</summary>
-  <input ng-show="!fastCamera" type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
-  <input   ng-show="fastCamera" type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
-  <input  ng-show="continueRender" type="button" ng-click = "stop()"  value="Stop Render"></input> 
-  <input  ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input> 
-
-
-   <span>Object Rotation Speed</span>
-   <input style="width: 75px; display:inline" type="range" name="rotation" min="-20" max="20" step="1" ng-model = "rotation">
-   <input type ="button" value="Clear rotation" ng-click="clearRotation()"></input>
-
-
-</details>
-
-
-
-
 </div>
+ </div>
+
+<h4>Controls</h4>
+  <input ng-show="!fastCamera"     type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
+  <input ng-show="fastCamera"      type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
+  <input ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Render"></input> 
+  <input ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input> 
+   <span>Object Rotation Speed</span>
+   <input style="width: 75px; display:inline" type="range" name="rotation" min="-20" max="20" step="1" ng-model = "rotation"></input>
+   <input type ="button" value="Clear rotation" ng-click="clearRotation()"></input>
 
 <div class="alignedContent" id="RenderWindow"></div>
 
 <p class="clear"/>
-<div class="standalone">
-<h2>Scene Code Editor (Must be valid JSON)</h2>
-<details>
-<summary>Try these edits...</summary>
+<div class="alignedContent">
+<h2>Scene Code</h2>
+<div class="accordion">
+<h3>Try these code changes...</h3>
 <ul>
   <li>  Try editing the hex values for colors to some other hex value, e.g. 0x236581 </li>
   <li>  Replace "Cylinder" with "Cone" and change "Height" from 1 to 2 </li>
   <li>  Adding another "Box," "Cylinder," or "Cone" object with position, dimension, and color properties to the
     end of the JSON array.</li>
 </ul>
-</details>
+</div>
+
+<div class="accordion">
+<h3>Editor (must be valid JSON)</h3>
 <div>
- <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="4" style="width:100%" placeholder="Your S4 code" >
- </textarea>
-  <button type="button" ng-click="showRoomScene()" >Show Room sample</button> 
-  <button type="button" ng-click="showGeneralScene()" >Show general sample</button>
- <button type="button" ng-click="updateRender()" >Update Model with your code</button>
+ <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="4" style="width:100%" placeholder="Your S4F code"></textarea>
+  <button type="button" ng-click="showRoomScene()" value="Show Room sample">Show Room sample</button> 
+  <button type="button" ng-click="showGeneralScene()" value="Show general sample">Show general sample</button>
+  <button type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
+</div>
 </div>
 </div>
 <h2>Source</h2>

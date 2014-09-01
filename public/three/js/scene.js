@@ -18,7 +18,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 
     //Create color values from RGB inputs or hex strings
     $scope.colorT = function (red, blue, green) {
-        this.color = green + (blue << 8) + (red << 16);
+        this.color = blue + (green << 8) + (red << 16);
     };
 
 
@@ -29,8 +29,8 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 
     $scope.scaleColor = function(color, scale) {
         var red;
-        var blue;
         var green;
+        var blue;
         red =   (color.color & 0xff0000) >> 16;
         green = (color.color & 0x00ff00) >> 8;
         blue =  (color.color & 0x0000ff);
@@ -53,7 +53,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Make a box with given dimensions and color with simple shaded material
     $scope.makeBox = function (length, width, depth, color) {
         var geometry = new THREE.BoxGeometry(length, width, depth);
-        var material = $scope.makeMaterial(color);
+        var material = $scope.makeMaterial(color, true);
         return new THREE.Mesh(geometry, material);
     };
 
@@ -81,7 +81,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 
         var shape = new THREE.Shape(shapePoints);
         var geometry = new THREE.ExtrudeGeometry(shape, extrusionSettings);
-        var material = $scope.makeMaterial(color);
+        var material = $scope.makeMaterial(color, false);
         return new THREE.Mesh(geometry, material);
     };
 
@@ -94,7 +94,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Make a box with given dimensions and color with simple shaded material
     $scope.makePlane = function (width, height, color) {
         var geometry = new THREE.PlaneGeometry(width, height, 2, 2);
-        var material = $scope.makeMaterial(color);
+        var material = $scope.makeMaterial(color, true);
         return new THREE.Mesh(geometry, material);
     };
 
@@ -109,7 +109,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Same as for box, but for cylinder
     $scope.makeCylinder = function (radiusTop, radiusBottom, height, verticalSegments, horizontalSegments, closed, color) {
         var geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, verticalSegments, horizontalSegments, closed);
-        var material = $scope.makeMaterial(color);
+        var material = $scope.makeMaterial(color, true);
         return new THREE.Mesh(geometry, material);
     };
 
@@ -123,7 +123,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Same as for box, but for cone
     $scope.makeCone = function (radiusBottom, height, verticalSegments, horizontalSegments, closed, color) {
         var geometry = new THREE.CylinderGeometry(0, radiusBottom, height, verticalSegments, horizontalSegments, closed);
-        var material = $scope.makeMaterial(color);
+        var material = $scope.makeMaterial(color, true);
         return new THREE.Mesh(geometry, material);
     };
 
@@ -135,8 +135,8 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     };
 
     //Make a simple shaded material to show basic highlights of a given color.
-    $scope.makeMaterial = function (color) {
-        return new THREE.MeshPhongMaterial({
+    $scope.makeMaterial = function (color, useTexture) {
+        var material = new THREE.MeshPhongMaterial({
             // light
             specular: $scope.scaleColor(color, 1.05).color,
             // intermediate
@@ -145,7 +145,14 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
             emissive: $scope.scaleColor(color, 0.95).color,
             shininess: 160,
             side : THREE.DoubleSide
-        })
+        });
+
+        if (useTexture) {
+            var normalMap = THREE.ImageUtils.loadTexture("./assets/normalMap4.png");
+            material.normalMap = normalMap;
+            material.normalScale = new THREE.Vector2(0.5, 0.5);
+        }
+        return material;
     };
 
     $scope.makeCamera = function() {
