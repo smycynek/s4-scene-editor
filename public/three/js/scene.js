@@ -53,7 +53,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Make a box with given dimensions and color with simple shaded material
     $scope.makeBox = function (length, width, depth, color) {
         var geometry = new THREE.BoxGeometry(length, width, depth);
-        var material = $scope.makeMaterial(color, true);
+        var material = $scope.makeMaterial(color, false);
         return new THREE.Mesh(geometry, material);
     };
 
@@ -109,7 +109,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Same as for box, but for cylinder
     $scope.makeCylinder = function (radiusTop, radiusBottom, height, verticalSegments, horizontalSegments, closed, color) {
         var geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, verticalSegments, horizontalSegments, closed);
-        var material = $scope.makeMaterial(color, true);
+        var material = $scope.makeMaterial(color, false);
         return new THREE.Mesh(geometry, material);
     };
 
@@ -123,7 +123,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Same as for box, but for cone
     $scope.makeCone = function (radiusBottom, height, verticalSegments, horizontalSegments, closed, color) {
         var geometry = new THREE.CylinderGeometry(0, radiusBottom, height, verticalSegments, horizontalSegments, closed);
-        var material = $scope.makeMaterial(color, true);
+        var material = $scope.makeMaterial(color, false);
         return new THREE.Mesh(geometry, material);
     };
 
