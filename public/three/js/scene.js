@@ -306,3 +306,20 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         });
     };
 });
+
+
+threeNgApp.directive("range",function(){
+    return {
+        restrict: "E",
+        template: '<input type="range" min="-20" max="20" value="0" ng-model="rotation" style="width:100px; display:inline"/>',
+        link: function(scope,element){
+            var rangeControl = element.find("input");
+            rangeControl.bind("change",function(){
+                scope.$apply(function(){
+                    scope.rotation = rangeControl.val();
+                });
+     
+            });
+        }
+    };
+});
