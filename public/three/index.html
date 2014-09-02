@@ -3,32 +3,13 @@
 <head>
   <title>S4F Scene editor</title>
   <style>canvas { width: 100%; height: 100% }</style>
-  <script src="jquery-ui-1.11.1/external/jquery/jquery.js"></script>
-  <script src="jquery-ui-1.11.1/jquery-ui.min.js"></script>
   <link rel="stylesheet" href="./styles/bootstrap.min.css"></link>
-  <link rel="stylesheet" href="./jquery-ui-1.11.1/jquery-ui.min.css"></link>
-  <script>
-  $(function() {
-    $( ".accordion" ).accordion({
-      collapsible: true, active: false
-    });
-  });
-  </script>
 </head>
 <h2>S4F Scene Editor</h2>
 <p>Requires desktop browser -- Chrome, FireFox, or IE11.  Later Android (4.4, etc..) browsers may be supported. Safari/Safari mobile may be supported with OSX10.10/iOS8.
 <body ng-controller="RenderCtrl" ng-init"doc=document" data-ng-init="mainRender()">
 <div class="alignedContent">
-<div class="accordion">
-  <h1>Demo features</h1>
-    <ol>
-      <li>AngularJS binding for commands and data input</li> 
-      <li>AngularJS async ajax-like JSON resource retrieval</li>
-      <li>JSON parsing (Using S4F -- "Steve's Super Simple Scene Format")</li>
-      <li>Three.JS models, textures, lights, and animation</li>
-      <li>Live scene editing--<a href="http://ace.c9.io/">ace editor</a> support coming soon!</li>
-    </ol>
-</div>
+
  </div>
 
 <h4>Controls</h4>
@@ -48,19 +29,9 @@
 <p class="clear"/>
 <div class="alignedContent">
 <h2>Scene Code</h2>
-<div class="accordion">
-<h3>Try these code changes...</h3>
-<ul>
-  <li>  Try editing the hex values for colors to some other hex value, e.g. 0x236581 </li>
-  <li>  Replace "Cylinder" with "Cone" and change "Height" from 1 to 2 </li>
-  <li>  Adding another "Box," "Cylinder," or "Cone" object with position, dimension, and color properties to the
-    end of the JSON array.</li>
-  <li>  Edit the extrusion profile point list.</li>
-</ul>
-</div>
 
-<div class="accordion">
-<h3>Editor (must be valid JSON)</h3>
+
+<p>Editor (must be valid JSON).  Try adding a new shape, changing a width or depth, a color hex value, or editing the extrusion path points.</p>
 <div>
  <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="4" style="width:100%" placeholder="Your S4F code"></textarea>
   <button type="button" ng-click="showRoomScene()" value="Show Room sample">Show Room sample</button> 
@@ -68,7 +39,7 @@
   <button type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
 </div>
 </div>
-</div>
+
 <h2>Source</h2>
  <div class="standalone">
   <a href="./data/rooms.json">Room Scene</a> |
