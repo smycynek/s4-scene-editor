@@ -162,11 +162,16 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     };
 
 
+    $scope.prettyPrintJSON = function(parsedJson) {
+        return JSON.stringify(parsedJson, null, '\t');
+    };
+
     //Refresh JSON scene from server and place in web-page text view.
     $scope.showGeneralScene = function() {
         //Get JSON S4F data containing geometry and textures
         $http({ method: 'GET', url: '/three/data/shapes.json' }).success(function (sceneJsonParsed, status, headers, config) {
-            $scope.currentJson = JSON.stringify(sceneJsonParsed);
+            $scope.currentJson = $scope.prettyPrintJSON(sceneJsonParsed);
+            $scope.setText($scope.prettyPrintJSON(sceneJsonParsed), false);
             $scope.updateRender();
         });
     };
@@ -175,9 +180,10 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     $scope.showRoomScene = function() {
         //Get JSON S4F data containing geometry and textures
         $http({ method: 'GET', url: '/three/data/rooms.json' }).success(function (sceneJsonParsed, status, headers, config) {
-            $scope.currentJson = JSON.stringify(sceneJsonParsed);
+            $scope.currentJson = $scope.prettyPrintJSON(sceneJsonParsed);
+            $scope.setText($scope.prettyPrintJSON(sceneJsonParsed), false);
             $scope.updateRender();
-        });
+        });  
     };
 
     ///Update the scene with the json text in the web-page text view.
@@ -188,7 +194,10 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
                 $scope.scene.remove(item);
             });
         }
-        $scope.sceneItems = $scope.createSceneItems(JSON.parse($scope.currentJson));
+        var text = $scope.getText(false);
+        console.log(text);
+        var parsed = JSON.parse(text);
+        $scope.sceneItems = $scope.createSceneItems(parsed);
             
         $scope.camera = $scope.makeCamera();
         //Create ThreeJS scene
@@ -209,7 +218,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     $scope.makeRenderer = function() {
         var renderer = new THREE.WebGLRenderer();
         renderer.shadowMapEnabled = true;
-        renderer.setSize(window.innerWidth / 3, window.innerHeight / 3);
+        renderer.setSize(window.innerWidth / 3.5, window.innerHeight / 3);
         document.getElementById("RenderWindow").appendChild(renderer.domElement);
         if ($scope.continueRender == false)
             $scope.continueRender = true;
@@ -283,7 +292,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         $scope.sceneItems.forEach(function (item) {
             if (!item.skipRotate) {
                 item.rotation.x += $scope.rotation / 500;
-                item.rotation.y += $scope.rotation / 1000;
+                //item.rotation.y += $scope.rotation / 1000;
             }
         });
                 //Orbit the camera around the items in the scene a bit each frame.
@@ -300,13 +309,55 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         //Get JSON S4F data containing geometry and textures
         $http({ method: 'GET', url: '/three/data/rooms.json' }).success(function (sceneJsonParsed, status, headers, config) {
           
-           $scope.currentJson =JSON.stringify(sceneJsonParsed);
+           $scope.currentJson =$scope.prettyPrintJSON(sceneJsonParsed);
+           $scope.setText($scope.prettyPrintJSON(sceneJsonParsed), false);
            $scope.updateRender();
            $scope.renderImpl();
         });
     };
-});
 
+
+
+
+var editor = ace.edit("editor");
+editor.setTheme("ace/theme/chrome");
+editor.getSession().setMode("ace/mode/json");
+editor.getSession().setUseWrapMode(true)
+editor.getSession().setTabSize(2);
+
+
+    $scope.chopQuotes = function(str) {
+        return str.substring(1, str.length - 1);
+    };
+
+    $scope.formatCode = function(str, chop) {
+        if (chop) {
+             return $scope.chopQuotes(str.replace(/\\/g, ''));
+        }
+        return str.replace(/\\/g, '');
+    };
+    $scope.editor = editor;
+
+    $scope.getText = function(chopQuotes) {
+       
+
+        if (chopQuotes) {
+            var chopped = $scope.chopQuotes($scope.editor.getValue());
+            console.log(chopped);
+            return chopped;
+        }
+        else {
+            return $scope.editor.getValue();
+        }
+
+    };
+
+    $scope.setText = function(json, chopText) {
+        $scope.editor.setValue($scope.formatCode(json, chopText));
+        $scope.editor.moveCursorTo(0,0);
+    };
+
+});
 
 threeNgApp.directive("range",function(){
     return {

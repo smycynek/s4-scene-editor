@@ -1,53 +1,97 @@
-<!DOCTYPE html>
 <html ng-app = "threeNgApp">
 <head>
-  <title>S4F Scene editor</title>
+  <title>S4F Scene editor - Angular and ThreeJS demo</title>
   <style>canvas { width: 100%; height: 100% }</style>
+  <script src="js/three.min.js"></script>
+  <script src="js/angular.min.js"></script>
+  <script src="ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
   <link rel="stylesheet" href="./styles/bootstrap.min.css"></link>
+
+  <style type="text/css" media="screen">
+    #editor { 
+        position: relative;
+        height:450px;
+        width:700px;
+        float:left;
+    }
+  </style>
+
 </head>
-<h2>S4F Scene Editor</h2>
-<p>Requires desktop browser -- Chrome, FireFox, or IE11.  Later Android (4.4, etc..) browsers may be supported. Safari/Safari mobile may be supported with OSX10.10/iOS8.
+
 <body ng-controller="RenderCtrl" ng-init"doc=document" data-ng-init="mainRender()">
-<div class="alignedContent">
+<h1>S4F* Scene Editor</h1>
+<p><i>*Steve's Super Simple Scene Format</i></p>
+<div style="align:center;">
+<table>
+  <tr>
+    <td style="padding-right: 12px;">
+      <h3>Your Model</h3>
+      <p>Requires Desktop Chrome, Firefox, or IE11.  Some mobile support</p>
+  </td>
+  <td style="padding-left: 12px">
+    <h3>Your Code</h3>
+    <p>Try editing a color or parameter or adding an additional shape</p>
+  </td>
+</tr>
+<tr>
+  <td valign="top" >
+<div id="RenderWindow"></div>
+</td>
+<td valign="top" rowspan="4" style="padding-left: 12px">
+<div id="editor">{"test":1}</div><br/>
+</td>
+</tr>
 
- </div>
-
-<h4>Controls</h4>
+<tr><td>  
+  <h4>Controls</h4>
   <input ng-show="!fastCamera"     type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
   <input ng-show="fastCamera"      type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
+
+
   <input ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Render"></input> 
-  <input ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input> 
+  <input ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input>
 
- <div> 
-     <input type ="button" value="Reset" ng-click="clearRotation()"></input>
-    <span>Object Rotation Speed</span>
-    <range></range>
-</div>
+</td>
+</tr>
 
-<div class="alignedContent" id="RenderWindow"></div>
+<tr><td><h4>Models</h4>
+  <span>Object Rotation Speed</span>
+ <range></range>
+   <input type ="button" value="Clear" ng-click="clearRotation()"></input>
 
-<p class="clear"/>
-<div class="alignedContent">
-<h2>Scene Code</h2>
-
-
-<p>Editor (must be valid JSON).  Try adding a new shape, changing a width or depth, a color hex value, or editing the extrusion path points.</p>
-<div>
- <textarea ng-model="currentJson" id="jsonInput" class="sourcecode"  rows="4" style="width:100%" placeholder="Your S4F code"></textarea>
+</td></tr>
+<tr><td>
   <button type="button" ng-click="showRoomScene()" value="Show Room sample">Show Room sample</button> 
-  <button type="button" ng-click="showGeneralScene()" value="Show general sample">Show general sample</button>
-  <button type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
-</div>
-</div>
+  <button type="button" ng-click="showGeneralScene()" value="Show general sample">Show general sample</button></td></tr>
 
+<tr>
+<td>
+
+
+ 
+
+</td>
+<td style="padding-left: 12px">
+
+
+    
+  <div class="standalone">
+    <button type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
+  </div>
+
+</td>
+</tr>
+</table>
+</div>
 <h2>Source</h2>
  <div class="standalone">
   <a href="./data/rooms.json">Room Scene</a> |
   <a href="./data/shapes.json">General Scene</a> 
 </div>
   <p><a href="https://github.com/smycynek/s4-scene-editor">https://github.com/smycynek/s4-scene-editor</a></p>
-</body>
-  <script src="js/angular.min.js"></script>
-  <script src="js/three.min.js"></script>
+
   <script src="js/scene.js"></script>
+
+</body>
 </html>

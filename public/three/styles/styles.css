@@ -8,12 +8,26 @@
  }
  .alignedContent
   {
-  width:48%;
+  width:30%;
   padding-left:5px;
   padding-right:5px;
-
   display:block;
   float:left;
+}
+
+
+.aleft 
+{
+    float: left;
+    width: 250px;
+    background-color: red;
+}
+
+.aright 
+{
+    float: right;
+    width: 250px;
+    background-color: green;
 }
 
 
@@ -26,3 +40,5 @@ h1,h2,h3,h4,h5,h6,td,th,p,div,li,body
 p.clear {
     clear: both;
 }
+
+
