@@ -176,6 +176,17 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         });
     };
 
+    $scope.showSimpleScene = function() {
+        //Get JSON S4F data containing geometry and textures
+        $http({ method: 'GET', url: '/three/data/simple.json' }).success(function (sceneJsonParsed, status, headers, config) {
+            $scope.currentJson = $scope.prettyPrintJSON(sceneJsonParsed);
+            $scope.setText($scope.prettyPrintJSON(sceneJsonParsed), false);
+            $scope.updateRender();
+        });
+    };
+   
+
+
 //Refresh JSON scene from server and place in web-page text view.
     $scope.showRoomScene = function() {
         //Get JSON S4F data containing geometry and textures

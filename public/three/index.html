@@ -1,6 +1,7 @@
+<!DOCTYPE html>
 <html ng-app = "threeNgApp">
 <head>
-  <title>S4F Scene editor - Angular and ThreeJS demo</title>
+  <title>S4F Scene editor - Build 3d worlds with code!</title>
   <style>canvas { width: 100%; height: 100% }</style>
   <script src="js/three.min.js"></script>
   <script src="js/angular.min.js"></script>
@@ -20,18 +21,18 @@
 </head>
 
 <body ng-controller="RenderCtrl" ng-init"doc=document" data-ng-init="mainRender()">
-<h1>S4F* Scene Editor</h1>
+<h1>Scene Editor - build 3D World with code using S4F*</h1>
 <p><i>*Steve's Super Simple Scene Format</i></p>
 <div style="align:center;">
 <table>
   <tr>
     <td style="padding-right: 12px;">
-      <h3>Your Model</h3>
+      <h3>Your Scene</h3>
       <p>Requires Desktop Chrome, Firefox, or IE11.  Some mobile support</p>
   </td>
   <td style="padding-left: 12px">
     <h3>Your Code</h3>
-    <p>Try editing a color or parameter or adding an additional shape</p>
+    <p>Try editing a color or parameter or adding an additional shape. <a href="help.html">More help...</a></p>
   </td>
 </tr>
 <tr>
@@ -49,8 +50,8 @@
   <input ng-show="fastCamera"      type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
 
 
-  <input ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Render"></input> 
-  <input ng-show="!continueRender" type="button" ng-click = "start()" value="Start Render"></input>
+  <input ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Animation"></input> 
+  <input ng-show="!continueRender" type="button" ng-click = "start()" value="Start Animation"></input>
 
 </td>
 </tr>
@@ -63,7 +64,9 @@
 </td></tr>
 <tr><td>
   <button type="button" ng-click="showRoomScene()" value="Show Room sample">Show Room sample</button> 
-  <button type="button" ng-click="showGeneralScene()" value="Show general sample">Show general sample</button></td></tr>
+  <button type="button" ng-click="showGeneralScene()" value="Show general sample">Show general sample</button>
+  <button type="button" ng-click="showSimpleScene()" value="Show simple sample">Show simple sample</button></td>
+</tr>
 
 <tr>
 <td>

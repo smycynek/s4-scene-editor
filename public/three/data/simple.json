@@ -1,0 +1,26 @@
+{ 
+"ShapeList": [ 
+{ 
+"Type" : "Cone", 
+ "Data" : { 
+   "Position" : 
+   {
+      "X":0, 
+      "Y":0, 
+      "Z":0
+   },
+   "Rotation" : 
+   {
+      "X":0,
+      "Y":0,
+      "Z":0
+   },
+   "Color": "0xcc2233",  
+   "Parameters" :
+   {
+      "Radius" : 0.5, 
+      "Height": 1 
+   }
+ }
+} 
+]}
