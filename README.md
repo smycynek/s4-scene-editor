@@ -7,3 +7,4 @@ S4-Scene-Editor
 *  Requires Chrome or later versions of IE -- not tested on other browsers.
 *  Live demo at: [http://stevenvictor.net/three/](http://stevenvictor.net/three/)
 
+![Screen Shot](./s4f_screenshot.png)
