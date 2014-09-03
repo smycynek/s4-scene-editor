@@ -5,23 +5,14 @@
   <link rel="stylesheet" href="./styles/bootstrap.min.css"></link>
 </head>
 <body>
-<h3>What is this site?</h3>
+<h1>Working with the S4F Scene code</h1>
 <p>
-This is just a fun experiment I used to learn a little ThreeJS, AngularJS, and the Ace  code editor.  I hope it's a fun experiment for you to play around with some 3D graphics.
+The scene is defined in <a href="http://en.wikipedia.org/wiki/JSON">JSON</a>-based format called S4F.  It's pretty simple -- it only defines a few shape types, positions, rotation, and color.  Positions and rotations are defined with X,Y,Z coordinates, and colors are defined with hex-based strings.  For example, 0xff0080 is 100% red, 0% green, and 50% blue (reddish-purple).
 </p>
-<h3>Why doesn't it support Safari/IOS?</h3>
-<p>
-This site uses ThreeJS and WebGL, and while there is some polyfill support for it on Safari and IOS, it is limited, so I'm not supporting it for now
-</p>
-
-<h3>How do I work with the scene code?</h3>
-<p>
-The scene is defined in JSON-based format called S4F.  It's pretty simple -- it only defines a few shape types, positions, rotation, and color.  Positions and rotations are defined with X,Y,Z coordinates, and colors are defined with hex-based strings.  For example, 0xff0000 is 100% red, 0% blue, and 0% green.
-</p>
-<p>Try these steps on the main page (see screen shot below)</p>
+<p>Try these steps on the main page (see screen shot numbed items below)</p>
 <ol>
-  <li>Click the 'Simple Sample' button</li>
-  <li>Change the 'Y' position from 0 to 1.5</li>
+  <li>Click the 'Simple Scene' button</li>
+  <li>Change the 'X' position from 0 to 1.5</li>
   <li>Change the 'Color' parameter from 0xcc2233 to 0x22cc33</li>
   <li>Change the 'Height' parameter from 1 to 3</li>
   <li>Click the 'Update Model' button</li>
@@ -30,18 +21,13 @@ The scene is defined in JSON-based format called S4F.  It's pretty simple -- it 
 <p>If all went well, you should now have a slightly-off center, taller cone, that is greenish rather than reddish.</p>
 <img src="images/example.png"></img>
 
-<p>Note that the editor will attempt to correct for basic <a href="http://en.wikipedia.org/wiki/JSON">JSON</a> syntax errors, but it's not foolproof.
+<p>Note that the editor will attempt to correct for basic JSON syntax errors, but it's not foolproof.
   Note that any decimals less than one must start with a leading zero, e.g. 0.5, not .5.</p>
   
   <p>Once you've gotten some practice with this, try looking at the 'General Scene.'  Note that the main 'ShapeList'
     node contains an array (defined by square brackets[]) with comma-separated shape objects.  Try creating some boxes, cones, cylinders, planes, or even extrusions.  Note that the ''"''Parameters'"' section of the different shape types is different depending on the shape.  (A rectangle has a length, width, and depth, while a cone has height and a radius.)
   </p>
 
-
-<h3>Why not use an existing file format, such as X3D or Collada, instead of inventing S4F?</h3>
-<p>
-I wanted to create something from scratch just for fun, and I wanted it to be very simple for demo purposes.
-</p>
 <hr/>
 <p>
 Back to the <a href="index.html">main page</a>.

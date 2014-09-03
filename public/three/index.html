@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app = "threeNgApp">
 <head>
-  <title>S4F Scene editor - Build 3d worlds with code!</title>
+  <title>S4F Scene editor - Build 3D worlds with code!</title>
   <style>canvas { width: 100%; height: 100% }</style>
   <script src="js/three.min.js"></script>
   <script src="js/angular.min.js"></script>
@@ -10,89 +10,86 @@
   <link rel="stylesheet" href="./styles/bootstrap.min.css"></link>
 
   <style type="text/css" media="screen">
-    #editor { 
-        position: relative;
-        height:450px;
-        width:700px;
-        float:left;
-    }
+  #editor { 
+    position: relative;
+    height:450px;
+    width:700px;
+    float:left;
+  }
   </style>
 
 </head>
 
 <body ng-controller="RenderCtrl" ng-init"doc=document" data-ng-init="mainRender()">
-<h1>Scene Editor - build 3D World with code using S4F*</h1>
-<p><i>*Steve's Super Simple Scene Format</i></p>
-<div style="align:center;">
-<table>
-  <tr>
-    <td style="padding-right: 12px;">
-      <h3>Your Scene</h3>
-      <p>Requires Desktop Chrome, Firefox, or IE11.  Some mobile support</p>
-  </td>
-  <td style="padding-left: 12px">
-    <h3>Your Code</h3>
-    <p>Try editing a color or parameter or adding an additional shape. <a href="help.html">More help...</a></p>
-  </td>
-</tr>
-<tr>
-  <td valign="top" >
-<div id="RenderWindow"></div>
-</td>
-<td valign="top" rowspan="4" style="padding-left: 12px">
-<div id="editor">{"test":1}</div><br/>
-</td>
-</tr>
+  <h1>Scene editor - Build 3D worlds with code using S4F*</h1>
+  <p><i>*Steve's Super Simple Scene Format</i></p>
+  <div style="margin-left: auto; margin-right: auto; width: 90%;">
+    <table>
+      <tr>
+        <td style="padding-right: 12px;">
+          <h3>Your Scene</h3>
+          <p>Requires Desktop Chrome, Firefox, or IE11.  Some mobile support</p>
+        </td>
+        <td style="padding-left: 12px">
+          <h3>Your Code</h3>
+          <p>Try editing a color or parameter or adding an additional shape. <a href="help.html">More help...</a></p>
+        </td>
+      </tr>
+      <tr>
+        <td style="vertical-align:top;" >
+          <div id="RenderWindow"></div>
+        </td>
+        <td style="vertical-align:top;" rowspan="4" style="padding-left: 12px">
+          <div id="editor">{"test":1}</div><br/>
+        </td>
+      </tr>
+      <tr>
+        <td>  
+          <h4>Controls</h4>
+          <input ng-show="!fastCamera"     type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
+          <input ng-show="fastCamera"      type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
+          <input ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Animation"></input> 
+          <input ng-show="!continueRender" type="button" ng-click = "start()" value="Start Animation"></input>
+        </td>
+      </tr>
 
-<tr><td>  
-  <h4>Controls</h4>
-  <input ng-show="!fastCamera"     type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
-  <input ng-show="fastCamera"      type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
+      <tr>
+        <td>
+          <span>Object Rotation Speed ({{rotation}})</span>
+          <range></range>
+          <input type ="button" value="Clear" ng-click="clearRotation()"></input>
 
+        </td>
+      </tr>
+      <tr>
+        <td>
+         </td>
+      </tr>
+      <tr>
+        <td><h4>Models</h4>
+         <button type="button" ng-click="showRoomScene()" value="Show Room sample">Room scene</button> 
+          <button type="button" ng-click="showGeneralScene()" value="Show general sample">General scene</button>
+          <button type="button" ng-click="showSimpleScene()" value="Show simple sample">Simple scene</button>
 
-  <input ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Animation"></input> 
-  <input ng-show="!continueRender" type="button" ng-click = "start()" value="Start Animation"></input>
+        </td>
+        <td style="padding-left: 12px" style="vertical-align:bottom;">
+          <div class="standalone">
+            <button type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
+          </div>
 
-</td>
-</tr>
-
-<tr><td><h4>Models</h4>
-  <span>Object Rotation Speed</span>
- <range></range>
-   <input type ="button" value="Clear" ng-click="clearRotation()"></input>
-
-</td></tr>
-<tr><td>
-  <button type="button" ng-click="showRoomScene()" value="Show Room sample">Show Room sample</button> 
-  <button type="button" ng-click="showGeneralScene()" value="Show general sample">Show general sample</button>
-  <button type="button" ng-click="showSimpleScene()" value="Show simple sample">Show simple sample</button></td>
-</tr>
-
-<tr>
-<td>
-
-
- 
-
-</td>
-<td style="padding-left: 12px">
-
-
-    
-  <div class="standalone">
-    <button type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
+        </td>
+      </tr>
+    </table>
   </div>
-
-</td>
-</tr>
-</table>
-</div>
-<h2>Source</h2>
- <div class="standalone">
-  <a href="./data/rooms.json">Room Scene</a> |
-  <a href="./data/shapes.json">General Scene</a> 
-</div>
-  <p><a href="https://github.com/smycynek/s4-scene-editor">https://github.com/smycynek/s4-scene-editor</a></p>
+  <h2>About</h2>
+  <ul>
+    <li>
+      <a href="./data/rooms.json">Room Scene</a> |
+      <a href="./data/shapes.json">General Scene</a> 
+    </li>
+    <li><a href="https://github.com/smycynek/s4-scene-editor">https://github.com/smycynek/s4-scene-editor</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+  </ul>
 
   <script src="js/scene.js"></script>
 
