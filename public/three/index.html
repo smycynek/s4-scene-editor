@@ -28,7 +28,7 @@
       <tr>
         <td style="padding-right: 12px;">
           <h3>Your Scene</h3>
-          <p>Requires Desktop Chrome, Firefox, or IE11.  Some mobile support</p>
+          <p>Use desktop browser.  Some mobile support.  <a href="faq.html#Safari">Safari Support</a>
         </td>
         <td style="padding-left: 12px">
           <h3>Your Code</h3>
@@ -46,10 +46,12 @@
       <tr>
         <td>  
           <h4>Controls</h4>
-          <input ng-show="!fastCamera"     type="button" ng-click = "setFast()"  value="Fast Camera Orbit"></input>
-          <input ng-show="fastCamera"      type="button" ng-click = "setSlow()"  value="Slow Camera Orbit"></input> 
-          <input ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Animation"></input> 
-          <input ng-show="!continueRender" type="button" ng-click = "start()" value="Start Animation"></input>
+          <div class="btn-group">
+          <button class="btn btn-default"  ng-show="!fastCamera"     type="button" ng-click = "setFast()"  value="Fast Camera Orbit">Fast Camera Orbit</button>
+          <button class="btn btn-default"  ng-show="fastCamera"      type="button" ng-click = "setSlow()"  value="Slow Camera Orbit">Slow Camera Orbit</button> 
+          <button class="btn btn-default" ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Animation">Stop Animation</button> 
+          <button class="btn btn-default" ng-show="!continueRender" type="button" ng-click = "start()" value="Start Animation">Start Animation</button>
+        </div>
         </td>
       </tr>
 
@@ -57,8 +59,11 @@
         <td>
           <span>Object Rotation Speed ({{rotation}})</span>
           <range></range>
-          <input type ="button" value="Clear" ng-click="clearRotation()"></input>
-
+          <div class="btn-group">
+          <button style="horizontal-align:right;" class="btn btn-default" type ="button" value="Clear" ng-click="clearRotation()">
+            Clear
+          </button>
+          </div>
         </td>
       </tr>
       <tr>
@@ -67,14 +72,16 @@
       </tr>
       <tr>
         <td><h4>Models</h4>
-         <button type="button" ng-click="showRoomScene()" value="Show Room sample">Room scene</button> 
-          <button type="button" ng-click="showGeneralScene()" value="Show general sample">General scene</button>
-          <button type="button" ng-click="showSimpleScene()" value="Show simple sample">Simple scene</button>
 
+          <div class="btn-group">
+         <button type="button" class="btn btn-default" ng-click="showRoomScene()" value="Show Room sample">Room scene</button> 
+          <button type="button" class="btn btn-default"  ng-click="showGeneralScene()" value="Show general sample">General scene</button>
+          <button type="button" class="btn btn-default"  ng-click="showSimpleScene()" value="Show simple sample">Simple scene</button>
+      </div>
         </td>
         <td style="padding-left: 12px" style="vertical-align:bottom;">
           <div class="standalone">
-            <button type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
+            <button class="btn btn-default" type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
           </div>
 
         </td>
