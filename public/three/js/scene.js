@@ -275,6 +275,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         }
         var parsed = JSON.parse(text);
         $scope.sceneItems = $scope.createSceneItems(parsed);
+        $scope.animationTracks = parsed.AnimationTracks;
         $scope.camera = $scope.makeCamera();
         //Create ThreeJS scene
         $scope.scene = $scope.newScene();
