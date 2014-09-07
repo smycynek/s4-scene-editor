@@ -21,6 +21,36 @@
       "Radius" : 0.5, 
       "Height": 1 
    }
+ },
+ "AnimationTrack" : "Track1"
+},
+{ 
+"Type" : "Plane", 
+ "Data" : { 
+   "Position" : 
+   {
+      "X":0, 
+      "Y":-0.75, 
+      "Z":0
+   },
+   "Rotation" : 
+   {
+      "X":1.5708,
+      "Y":0,
+      "Z":0
+   },
+   "Color": "0x22aa99",  
+   "Parameters" :
+   {
+      "Width" : 7, 
+      "Height": 7 
+   }
  }
-} 
-]}
+}  
+],
+"AnimationTracks" :
+{
+   "Track1": [[0,0,3.5],[3.5,0,3.5],[3.5,0,-3.5], [-3.5,0,-3.5],[-3.5,0,3.5], [0,0,3.5], [0,0,0], [0,2,0]]
+}
+
+}

@@ -1,18 +1,74 @@
 
 var threeNgApp = angular.module("threeNgApp", []);
 
+
+//Simple ThreeJS vector string formatter
+var vecToString = function (vec) {
+    return vec.x.toString() + ", "+ vec.y.toString() + ", " + vec.z.toString();
+};
+
+//Make a 2-second tween translation of an object between two points.
+var makeTween = function (object, startVec, endVec) {
+          var tween = new TWEEN.Tween( { x : startVec.x, y : startVec.y, z : startVec.z, theItem: object} )
+                    .to( { x : endVec.x, y : endVec.y, z : endVec.z}, 2000 )
+                    .easing( TWEEN.Easing.Linear.None )
+                    .onStart( function() {
+                        this.theItem.position.x = this.x;
+                        this.theItem.position.y = this.y;
+                        this.theItem.position.z = this.z;
+                        this.theItem.geometry.verticesNeedUpdate=true;
+                        this.theItem.geometry.normalsNeedUpdate = true;
+                    
+                    })
+                    .onUpdate( function () {
+
+                        this.theItem.position.x = this.x;
+                        this.theItem.position.y = this.y;
+                        this.theItem.position.z = this.z;
+
+                        this.theItem.geometry.verticesNeedUpdate = true;
+                        this.theItem.geometry.normalsNeedUpdate = true;
+                     
+                        //console.log("Object: " + vecToString(this.theItem.position));
+
+                    } )
+                    .onComplete(function() {
+                        this.theItem.geometry.verticesNeedUpdate=true;
+                        this.theItem.geometry.normalsNeedUpdate = true;
+                    });
+
+                    return tween;
+                   
+};
+
+//Make a set of tween translation animations on an object in sequence from a list of points in a path
+var makeAnimationChain = function(object, pointList) {
+                    var tweens = [];
+                    if (pointList.length <2)
+                        return;
+                    for (var idx = 0; idx != pointList.length; idx = idx+1) {
+                        var currentVector = {x : pointList[idx][0], y : pointList[idx][1], z : pointList[idx][2]};
+                        var nextVector = {x : pointList[idx+1][0], y : pointList[idx+1][1], z : pointList[idx+1][2]};
+                       
+                        var tween = makeTween(object, currentVector, nextVector);
+                        tweens.push(tween);
+                        if (idx > 0) {
+                            tweens[idx-1].chain(tweens[idx]);
+                        }
+                        if (idx == pointList.length-2) {
+                            break;
+                        }
+
+                    }
+                   return tweens;
+               };
+
+
 //Main (and only) angular controller for the body of index.html
 threeNgApp.controller("RenderCtrl", function ($scope, $http) {
-    $scope.setFast = function () { $scope.fastCamera = true; $scope.increment = $scope.bigIncrement; };
-    $scope.setSlow = function () { $scope.fastCamera = false; $scope.increment = $scope.smallIncrement; };
-    $scope.bigIncrement = 0.01;
-    $scope.smallIncrement = 0.003;
-    $scope.increment = $scope.smallIncrement;
-    $scope.rotation = 0;
+    $scope.debug = false;
+    $scope.orbitSpeed = 0;
     $scope.continueRender = true;
-    $scope.fastCamera = false;
-    $scope.stop = function () { $scope.continueRender = false; };
-    $scope.start = function () { $scope.continueRender = true; };
 
     //Create color values from RGB inputs
     $scope.colorByTriple = function (red, blue, green) {
@@ -37,14 +93,15 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 
     //Set basic translation, rotation, and other parameters on an object from parsed JSON input
     $scope.basicInit = function (geometry, jsonParameters) {
-        geometry.position.x = jsonParameters.Position.X;
-        geometry.position.y = jsonParameters.Position.Y;
-        geometry.position.z = jsonParameters.Position.Z;
-        geometry.rotation.x = jsonParameters.Rotation.X;
-        geometry.rotation.y = jsonParameters.Rotation.Y;
-        geometry.rotation.z = jsonParameters.Rotation.Z;
-
-        geometry.originalRotation = {x : geometry.rotation.x, y : geometry.rotation.y};
+        geometry.position.x = jsonParameters.Data.Position.X;
+        geometry.position.y = jsonParameters.Data.Position.Y;
+        geometry.position.z = jsonParameters.Data.Position.Z;
+        geometry.rotation.x = jsonParameters.Data.Rotation.X;
+        geometry.rotation.y = jsonParameters.Data.Rotation.Y;
+        geometry.rotation.z = jsonParameters.Data.Rotation.Z;
+        geometry.animationTrack = jsonParameters.AnimationTrack;
+        geometry.originalRotation = {x : geometry.rotation.x, y : geometry.rotation.y, z: geometry.rotation.z};
+        geometry.originalPosition = {x : geometry.position.x, y: geometry.position.y, z: geometry.position.z};
         geometry.castShadow = true;
         geometry.receiveShadow = true;
     };
@@ -59,7 +116,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Make a box from S4F JSON data 
     $scope.makeBoxFromJson = function (jsonItem) {
         var geometry = $scope.makeBox(jsonItem.Data.Parameters.Length, jsonItem.Data.Parameters.Width, jsonItem.Data.Parameters.Depth, new $scope.color(jsonItem.Data.Color));
-        $scope.basicInit(geometry, jsonItem.Data);
+        $scope.basicInit(geometry, jsonItem);
         return geometry;
     };
 
@@ -88,7 +145,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Make an extrusion from S4F JSON data 
     $scope.makeExtrusionFromJson = function (jsonItem) {
         var geometry = $scope.makeExtrusion(jsonItem.Data.Parameters.Profile, jsonItem.Data.Parameters.Depth, new $scope.color(jsonItem.Data.Color));
-        $scope.basicInit(geometry, jsonItem.Data);
+        $scope.basicInit(geometry, jsonItem);
         return geometry;
     };
 
@@ -102,8 +159,8 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Make a box from S4F JSON data 
     $scope.makePlaneFromJson = function (jsonItem) {
         var geometry = $scope.makePlane(jsonItem.Data.Parameters.Width, jsonItem.Data.Parameters.Height, new $scope.color(jsonItem.Data.Color));
-        $scope.basicInit(geometry, jsonItem.Data);
-        geometry.skipRotate = true;  //We don't rotate planes in animations currently, so add this extra attribute.
+        $scope.basicInit(geometry, jsonItem);
+        //geometry.skipTranslate = true;  //We don't rotate planes in animations currently, so add this extra attribute.
         return geometry;
     };
 
@@ -117,7 +174,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Same as for box, but for cylinder
     $scope.makeCylinderFromJson = function (jsonItem) {
         var geometry = $scope.makeCylinder(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, new $scope.color(jsonItem.Data.Color));
-        $scope.basicInit(geometry, jsonItem.Data);
+        $scope.basicInit(geometry, jsonItem);
         return geometry;
     };
 
@@ -131,13 +188,15 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Same as for box, but for cone
     $scope.makeConeFromJson = function (jsonItem) {
         var geometry = $scope.makeCone(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, new $scope.color(jsonItem.Data.Color));
-        $scope.basicInit(geometry, jsonItem.Data);
+        $scope.basicInit(geometry, jsonItem);
         return geometry;
     };
 
     //Make a simple shaded material to show basic highlights of a given color-with optional normal map
     $scope.makeMaterial = function (color, useNormalMap) {
         var material = new THREE.MeshPhongMaterial({
+            transparent: true, 
+            opacity: 0.75,
             // light
             specular: $scope.scaleColor(color, 1.05).color,
             // intermediate
@@ -171,12 +230,15 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
    //Update the scene with the JSON from a given url string
     $scope.showScene = function (url) {
         $http({ method: 'GET', url: url }).success(function (sceneJsonParsed, status, headers, config) {
+            $scope.animationTracks = sceneJsonParsed.AnimationTracks;
             $scope.currentJson = $scope.prettyPrintJSON(sceneJsonParsed);
             $scope.setText($scope.prettyPrintJSON(sceneJsonParsed), false);
             $scope.updateRender();
-            console.log(status);
-            console.log(headers);
-            console.log(config);
+            if ($scope.debug) {
+                console.log(status);
+                console.log(headers);
+                console.log(config);
+            }
         }
             );
     };
@@ -208,7 +270,9 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
             });
         }
         var text = $scope.getText(false);
-        console.log(text);
+        if ($scope.debug) {
+            console.log(text);
+        }
         var parsed = JSON.parse(text);
         $scope.sceneItems = $scope.createSceneItems(parsed);
         $scope.camera = $scope.makeCamera();
@@ -232,7 +296,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     $scope.makeRenderer = function () {
         var renderer = new THREE.WebGLRenderer();
         renderer.shadowMapEnabled = true;
-        renderer.setSize(window.innerWidth / 3.5, window.innerHeight / 3);
+        renderer.setSize(window.innerWidth / 2.5, window.innerHeight / 2);
         document.getElementById("RenderWindow").appendChild(renderer.domElement);
         if ($scope.continueRender === false) {
             $scope.continueRender = true;
@@ -243,20 +307,22 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Basic scene template setup -- create scene, add lights, and return scene object
     $scope.newScene = function () {
         var scene = new THREE.Scene();
-        var ambientLight = new THREE.AmbientLight(0x111111);
-        scene.add(ambientLight);
+       // var ambientLight = new THREE.AmbientLight(0x111111);
+        //scene.add(ambientLight);
         // Simple directional lighting, just to show some highlights
-        var directionalLight = new THREE.DirectionalLight(0x333333);
-        directionalLight.position.set(50, 50, 50);
-        directionalLight.castShadow = true;
-        directionalLight.shadowCameraNear = 0.1;
-        directionalLight.shadowCameraFar = 5;
-        scene.add(directionalLight);
+        //var directionalLight = new THREE.DirectionalLight(0x333333);
+        //directionalLight.position.set(50, 50, 50);
+        //directionalLight.castShadow = true;
+        //directionalLight.shadowCameraNear = 0.1;
+        //directionalLight.shadowCameraFar = 5;
+        //scene.add(directionalLight);
 
-        var spotLight = new THREE.SpotLight(0x999999);
-        spotLight.position.set(-10, 10, 10);
+        var spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(20, 40, 20);
         spotLight.castShadow = true;
-        spotLight.angle = Math.PI / 2.5;
+        //spotLight.angle = Math.PI / 2.5;
+        spotLight.shadowCameraNear = 20;
+        spotLight.shadowCameraFar = 150;
         scene.add(spotLight);
         return scene;
     };
@@ -295,17 +361,17 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 
     //Reset rotation on all scene items back to original settings -- set rotation speed to 0
     $scope.clearRotation = function () {
-        $scope.rotation = 0;
         $scope.sceneItems.forEach(function (item) {
-            if (!item.skipRotate) {
                 item.rotation.x = item.originalRotation.x;
                 item.rotation.y = item.originalRotation.y;
+                item.rotation.z = item.originalRotation.z;
             }
-        });
+        );
     };
 
     //Main render animation loop -- draws all items in scene, rotates objects and camera in each frame.
     $scope.renderImpl = function () {
+        TWEEN.update();  //update individual object animations
         requestAnimationFrame($scope.renderImpl);
         if ($scope.continueRender === false) {
             return;
@@ -313,18 +379,42 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         //Rotate each item in the scene a bit in each frame
         if ($scope.sceneItems) {
             $scope.sceneItems.forEach(function (item) {
-                if (!item.skipRotate) {
-                    item.rotation.x += $scope.rotation / 500;
-                }
+               //none
             });
             //Orbit the camera around the items in the scene a bit each frame.
             $scope.camera.position.y = 2;
-            $scope.camera.position.x = $scope.camera.position.x * Math.cos($scope.increment) + $scope.camera.position.z * Math.sin($scope.increment);
-            $scope.camera.position.z = $scope.camera.position.z * Math.cos($scope.increment) - $scope.camera.position.x * Math.sin($scope.increment);
+            $scope.camera.position.x = $scope.camera.position.x * Math.cos($scope.orbitSpeed/1000) + $scope.camera.position.z * Math.sin($scope.orbitSpeed/1000);
+            $scope.camera.position.z = $scope.camera.position.z * Math.cos($scope.orbitSpeed/1000) - $scope.camera.position.x * Math.sin($scope.orbitSpeed/1000);
             $scope.camera.lookAt($scope.scene.position);
             $scope.renderer.render($scope.scene, $scope.camera);
         }
     };
+
+    //Animate all the objects in a scene from the animation-track data supplied in the json file.
+    //Known issue --only one animation per scene (at a time) is currently supported -- currently investigating.
+    $scope.animateObjects = function () {
+         if ($scope.sceneItems) {
+            $scope.sceneItems.forEach(function (item) {
+                //if (!item.skipTranslate) {
+                    var itemPath = [];
+                    //See if an animation track was defined
+                    var animationTrackPoints = $scope.animationTracks[item.animationTrack];
+                    if (animationTrackPoints) {
+                        //Add the original position of the object as the first point
+                        itemPath.push([item.position.x, item.position.y, item.position.z]);
+                        animationTrackPoints.forEach(function (trackPoint) {
+                            itemPath.push(trackPoint);
+                        });
+                        //Return to the object's original position
+                        itemPath.push([item.position.x, item.position.y, item.position.z])
+                        //Make the set of animations and start them.
+                        var tweens = makeAnimationChain(item, itemPath);
+                        tweens[0].start();
+                    }
+                //}
+            });
+        }
+    }
 
     //Main entrypoint into the render loop -- initialize with "Room" scene.
     $scope.mainRender = function () {
@@ -358,7 +448,9 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     $scope.getText = function (chopQuotes) {
         if (chopQuotes) {
             var chopped = $scope.chopQuotes($scope.editor.getValue());
-            console.log(chopped);
+            if ($scope.debug) {
+                console.log(chopped);
+            }
             return chopped;
         }
         return $scope.editor.getValue();
@@ -378,12 +470,12 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 threeNgApp.directive("range", function () {
     return {
         restrict: "E",
-        template: '<input type="range" min="-20" max="20" value="0" ng-model="rotation" style="width:100px; display:inline"/>',
+        template: '<input type="range" min="-10" max="10" value="0" ng-model="orbitSpeed" style="width:100px; display:inline"/>',
         link: function (scope, element) {
             var rangeControl = element.find("input");
             rangeControl.bind("change", function () {
                 scope.$apply(function () {
-                    scope.rotation = rangeControl.val();
+                    scope.orbitSpeed = rangeControl.val();
                 });
             });
         }

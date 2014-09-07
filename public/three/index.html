@@ -7,7 +7,7 @@
   <script src="js/angular.min.js" defer></script>
 
   <script src="js/three.min.js" defer></script>
-
+  <script src="js/tween.js" defer></script>
   <script src="ace-builds/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8" defer></script>
 
   <link rel="stylesheet" href="./styles/bootstrap.min.css"></link>
@@ -16,7 +16,7 @@
   #editor { 
     position: relative;
     height:450px;
-    width:700px;
+    width:600px;
     float:left;
   }
   </style>
@@ -26,7 +26,7 @@
 <body ng-controller="RenderCtrl" ng-init"doc=document" data-ng-init="mainRender()">
   <h1>Scene editor - Build 3D worlds with code using S4F*</h1>
   <p><i>*Steve's Super Simple Scene Format</i></p>
-  <div style="margin-left: auto; margin-right: auto; width: 90%;">
+  <div style="margin-left: auto; margin-right: auto; width: 95%;">
     <table>
       <tr>
         <td style="padding-right: 12px;">
@@ -48,25 +48,19 @@
       </tr>
       <tr>
         <td>  
-          <h4>Controls</h4>
+    
           <div class="btn-group">
-          <button class="btn btn-default"  ng-show="!fastCamera"     type="button" ng-click = "setFast()"  value="Fast Camera Orbit">Fast Camera Orbit</button>
-          <button class="btn btn-default"  ng-show="fastCamera"      type="button" ng-click = "setSlow()"  value="Slow Camera Orbit">Slow Camera Orbit</button> 
-          <button class="btn btn-default" ng-show="continueRender"  type="button" ng-click = "stop()"  value="Stop Animation">Stop Animation</button> 
-          <button class="btn btn-default" ng-show="!continueRender" type="button" ng-click = "start()" value="Start Animation">Start Animation</button>
-        </div>
+             <button type="button" class="btn btn-default" ng-click="animateObjects()" value="Animate">Animate</button>
+           </div>
+  
         </td>
       </tr>
 
       <tr>
         <td>
-          <span>Object Rotation Speed ({{rotation}})</span>
-          <range></range>
-          <div class="btn-group">
-          <button style="horizontal-align:right;" class="btn btn-default" type ="button" value="Clear" ng-click="clearRotation()">
-            Clear
-          </button>
-          </div>
+          <span>Camera orbit</span>
+          <range></range>Speed:  {{orbitSpeed}}
+  
         </td>
       </tr>
       <tr>
@@ -74,7 +68,7 @@
          </td>
       </tr>
       <tr>
-        <td><h4>Models</h4>
+        <td>
 
           <div class="btn-group">
          <button type="button" class="btn btn-default" ng-click="showRoomScene()" value="Show Room sample">Room scene</button> 

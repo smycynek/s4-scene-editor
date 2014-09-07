@@ -21,7 +21,7 @@
       "Radius" : 0.5, 
       "Height": 1 
    }
- } 
+ }
 },
 { 
 "Type" : "Box", 
@@ -29,7 +29,7 @@
    "Position" : 
    {
       "X":0, 
-      "Y":1, 
+      "Y":0, 
       "Z":0
    },
    "Rotation" : 
@@ -42,10 +42,11 @@
    "Parameters" :
    {
    "Length": 1, 
-   "Width": 2, 
+   "Width": 1, 
    "Depth": 1
    }
- } 
+ },
+  "AnimationTrack" : "Track1" 
 }, 
 { 
 "Type" : "Cylinder", 
@@ -61,7 +62,7 @@
       "Y":1,
       "Z":0
    },
-   "Color": "0x998822",
+   "Color": "0x993322",
    "Parameters" :
    {
    "Radius": 1, 
@@ -74,18 +75,18 @@
  "Data" : { 
    "Position" : {
       "X":0, 
-      "Y":-0.3, 
+      "Y":-0.75, 
       "Z":0   
    },
       "Rotation" : {
-      "X":1.5,
+      "X":1.5708,
       "Y":0,
       "Z":0
    },
-   "Color": "0x912233",
+   "Color": "0x919933",
    "Parameters" : {
-   "Width": 6, 
-   "Height": 6  
+   "Width": 7, 
+   "Height": 7  
    }
  }  
 },
@@ -102,7 +103,7 @@
       "Y":0,
       "Z":0
    },
-   "Color": "0x44aa11",
+   "Color": "0x44aa44",
    "Parameters" : {
    "Depth": 1, 
    "Profile" : 
@@ -111,4 +112,10 @@
    }
 } 
 }  
-]}
+],
+"AnimationTracks" : 
+{
+   "Track1" : [[0,0,3.5],[3.5,0,3.5],[3.5,0,-3.5], [-3.5,0,-3.5],[-3.5,0,3.5], [0,0,3.5], [0,0,0], [0,2,0]],
+   "Track2" : [[0,0,0],[0,-0.5,0],[0,-0.5,0.5]]
+}
+}
