@@ -426,7 +426,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/json");
-    editor.getSession().setUseWrapMode(true);
+    //editor.getSession().setUseWrapMode(true);
     editor.getSession().setTabSize(2);
 
 //Set the ace editor in the angular scope
