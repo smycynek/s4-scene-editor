@@ -62,6 +62,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     $scope.debug = false;
     $scope.orbitSpeed = 0;
     $scope.continueRender = true;
+    $scope.statusMessage = "Initializing...";
 
     //Create color values from RGB inputs
     $scope.colorByTriple = function (red, blue, green) {
@@ -269,9 +270,9 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         var parsed = "";
         try {
             parsed = JSON.parse(text);
-            $scope.errorMessage = "OK";
+            $scope.statusMessage = "OK";
         } catch (err) {
-            $scope.errorMessage = err.message;
+            $scope.statusMessage = err.message;
             return;
         }
         $scope.sceneItems = $scope.createSceneItems(parsed);
@@ -388,7 +389,6 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     };
 
     //Animate all the objects in a scene from the animation-track data supplied in the json file.
-    //Known issue --only one animation per scene (at a time) is currently supported -- currently investigating.
     $scope.animateObjects = function () {
         if ($scope.sceneItems) {
             $scope.sceneItems.forEach(function (item) {
@@ -425,6 +425,11 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
 
 //Set the ace editor in the angular scope
     $scope.editor = editor;
+    $scope.editor.getSession().on("change", function () {
+        $scope.$apply(function () { //This will not update automatically -- need to force update
+            $scope.statusMessage = "Pending.";
+        });
+    });
 
     $scope.chopQuotes = function (str) {
         return str.substring(1, str.length - 1);
