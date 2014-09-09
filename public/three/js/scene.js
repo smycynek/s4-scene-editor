@@ -58,12 +58,17 @@ var makeAnimationChain = function (object, pointList) {
 
 
 //Main (and only) angular controller for the body of index.html
-threeNgApp.controller("RenderCtrl", function ($scope, $http) {
+threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     $scope.debug = false;
     $scope.orbitSpeed = 0;
     $scope.continueRender = true;
     $scope.statusMessage = "Initializing...";
-
+    $scope.setResize = function () {
+        $scope.camera.aspect = window.innerWidth / window.innerHeight;
+        $scope.camera.updateProjectionMatrix();
+        $scope.renderer.setSize(window.innerWidth / 2.5, window.innerHeight / 2);
+    };
+    $window.addEventListener('resize', $scope.setResize);
     //Create color values from RGB inputs
     $scope.colorByTriple = function (red, blue, green) {
         this.color = blue + (green << 8) + (red << 16);
