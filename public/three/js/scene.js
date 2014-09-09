@@ -4,64 +4,57 @@ var threeNgApp = angular.module("threeNgApp", []);
 
 //Simple ThreeJS vector string formatter
 var vecToString = function (vec) {
-    return vec.x.toString() + ", "+ vec.y.toString() + ", " + vec.z.toString();
+    return vec.x.toString() + ", " + vec.y.toString() + ", " + vec.z.toString();
 };
 
 //Make a 2-second tween translation of an object between two points.
 var makeTween = function (object, startVec, endVec) {
-          var tween = new TWEEN.Tween( { x : startVec.x, y : startVec.y, z : startVec.z, theItem: object} )
-                    .to( { x : endVec.x, y : endVec.y, z : endVec.z}, 2000 )
-                    .easing( TWEEN.Easing.Linear.None )
-                    .onStart( function() {
-                        this.theItem.position.x = this.x;
-                        this.theItem.position.y = this.y;
-                        this.theItem.position.z = this.z;
-                        this.theItem.geometry.verticesNeedUpdate=true;
-                        this.theItem.geometry.normalsNeedUpdate = true;
-                    
-                    })
-                    .onUpdate( function () {
-
-                        this.theItem.position.x = this.x;
-                        this.theItem.position.y = this.y;
-                        this.theItem.position.z = this.z;
-
-                        this.theItem.geometry.verticesNeedUpdate = true;
-                        this.theItem.geometry.normalsNeedUpdate = true;
-                     
+    var tween = new TWEEN.Tween({ x : startVec.x, y : startVec.y, z : startVec.z, theItem: object})
+        .to({ x : endVec.x, y : endVec.y, z : endVec.z}, 2000)
+        .easing(TWEEN.Easing.Linear.None)
+        .onStart(function () {
+            this.theItem.position.x = this.x;
+            this.theItem.position.y = this.y;
+            this.theItem.position.z = this.z;
+            this.theItem.geometry.verticesNeedUpdate = true;
+            this.theItem.geometry.normalsNeedUpdate = true;
+        })
+        .onUpdate(function () {
+            this.theItem.position.x = this.x;
+            this.theItem.position.y = this.y;
+            this.theItem.position.z = this.z;
+            this.theItem.geometry.verticesNeedUpdate = true;
+            this.theItem.geometry.normalsNeedUpdate = true;
                         //console.log("Object: " + vecToString(this.theItem.position));
-
-                    } )
-                    .onComplete(function() {
-                        this.theItem.geometry.verticesNeedUpdate=true;
-                        this.theItem.geometry.normalsNeedUpdate = true;
-                    });
-
-                    return tween;
-                   
+        })
+        .onComplete(function () {
+            this.theItem.geometry.verticesNeedUpdate = true;
+            this.theItem.geometry.normalsNeedUpdate = true;
+        });
+    return tween;
 };
 
 //Make a set of tween translation animations on an object in sequence from a list of points in a path
-var makeAnimationChain = function(object, pointList) {
-                    var tweens = [];
-                    if (pointList.length <2)
-                        return;
-                    for (var idx = 0; idx != pointList.length; idx = idx+1) {
-                        var currentVector = {x : pointList[idx][0], y : pointList[idx][1], z : pointList[idx][2]};
-                        var nextVector = {x : pointList[idx+1][0], y : pointList[idx+1][1], z : pointList[idx+1][2]};
-                       
-                        var tween = makeTween(object, currentVector, nextVector);
-                        tweens.push(tween);
-                        if (idx > 0) {
-                            tweens[idx-1].chain(tweens[idx]);
-                        }
-                        if (idx == pointList.length-2) {
-                            break;
-                        }
-
-                    }
-                   return tweens;
-               };
+var makeAnimationChain = function (object, pointList) {
+    var tweens = [];
+    var idx, currentVector, nextVector, tween;
+    if (pointList.length < 2) {
+        return;
+    }
+    for (idx = 0; idx !== pointList.length; idx = idx + 1) {
+        currentVector = {x : pointList[idx][0], y : pointList[idx][1], z : pointList[idx][2]};
+        nextVector = {x : pointList[idx + 1][0], y : pointList[idx + 1][1], z : pointList[idx + 1][2]};
+        tween = makeTween(object, currentVector, nextVector);
+        tweens.push(tween);
+        if (idx > 0) {
+            tweens[idx - 1].chain(tweens[idx]);
+        }
+        if (idx === pointList.length - 2) {
+            break;
+        }
+    }
+    return tweens;
+};
 
 
 //Main (and only) angular controller for the body of index.html
@@ -195,7 +188,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Make a simple shaded material to show basic highlights of a given color-with optional normal map
     $scope.makeMaterial = function (color, useNormalMap) {
         var material = new THREE.MeshPhongMaterial({
-            transparent: true, 
+            transparent: true,
             opacity: 0.75,
             // light
             specular: $scope.scaleColor(color, 1.05).color,
@@ -273,7 +266,14 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         if ($scope.debug) {
             console.log(text);
         }
-        var parsed = JSON.parse(text);
+        var parsed = "";
+        try {
+            parsed = JSON.parse(text);
+            $scope.errorMessage = "OK";
+        } catch (err) {
+            $scope.errorMessage = err.message;
+            return;
+        }
         $scope.sceneItems = $scope.createSceneItems(parsed);
         $scope.animationTracks = parsed.AnimationTracks;
         $scope.camera = $scope.makeCamera();
@@ -363,11 +363,10 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Reset rotation on all scene items back to original settings -- set rotation speed to 0
     $scope.clearRotation = function () {
         $scope.sceneItems.forEach(function (item) {
-                item.rotation.x = item.originalRotation.x;
-                item.rotation.y = item.originalRotation.y;
-                item.rotation.z = item.originalRotation.z;
-            }
-        );
+            item.rotation.x = item.originalRotation.x;
+            item.rotation.y = item.originalRotation.y;
+            item.rotation.z = item.originalRotation.z;
+        });
     };
 
     //Main render animation loop -- draws all items in scene, rotates objects and camera in each frame.
@@ -379,13 +378,10 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
         }
         //Rotate each item in the scene a bit in each frame
         if ($scope.sceneItems) {
-            $scope.sceneItems.forEach(function (item) {
-               //none
-            });
             //Orbit the camera around the items in the scene a bit each frame.
             $scope.camera.position.y = 2;
-            $scope.camera.position.x = $scope.camera.position.x * Math.cos($scope.orbitSpeed/1000) + $scope.camera.position.z * Math.sin($scope.orbitSpeed/1000);
-            $scope.camera.position.z = $scope.camera.position.z * Math.cos($scope.orbitSpeed/1000) - $scope.camera.position.x * Math.sin($scope.orbitSpeed/1000);
+            $scope.camera.position.x = $scope.camera.position.x * Math.cos($scope.orbitSpeed / 1000) + $scope.camera.position.z * Math.sin($scope.orbitSpeed / 1000);
+            $scope.camera.position.z = $scope.camera.position.z * Math.cos($scope.orbitSpeed / 1000) - $scope.camera.position.x * Math.sin($scope.orbitSpeed / 1000);
             $scope.camera.lookAt($scope.scene.position);
             $scope.renderer.render($scope.scene, $scope.camera);
         }
@@ -394,28 +390,26 @@ threeNgApp.controller("RenderCtrl", function ($scope, $http) {
     //Animate all the objects in a scene from the animation-track data supplied in the json file.
     //Known issue --only one animation per scene (at a time) is currently supported -- currently investigating.
     $scope.animateObjects = function () {
-         if ($scope.sceneItems) {
+        if ($scope.sceneItems) {
             $scope.sceneItems.forEach(function (item) {
-                //if (!item.skipTranslate) {
-                    var itemPath = [];
-                    //See if an animation track was defined
-                    var animationTrackPoints = $scope.animationTracks[item.animationTrack];
-                    if (animationTrackPoints) {
-                        //Add the original position of the object as the first point
-                        itemPath.push([item.position.x, item.position.y, item.position.z]);
-                        animationTrackPoints.forEach(function (trackPoint) {
-                            itemPath.push(trackPoint);
-                        });
-                        //Return to the object's original position
-                        itemPath.push([item.position.x, item.position.y, item.position.z])
-                        //Make the set of animations and start them.
-                        var tweens = makeAnimationChain(item, itemPath);
-                        tweens[0].start();
-                    }
-                //}
+                var itemPath = [];
+                //See if an animation track was defined
+                var animationTrackPoints = $scope.animationTracks[item.animationTrack];
+                if (animationTrackPoints) {
+                    //Add the original position of the object as the first point
+                    itemPath.push([item.position.x, item.position.y, item.position.z]);
+                    animationTrackPoints.forEach(function (trackPoint) {
+                        itemPath.push(trackPoint);
+                    });
+                    //Return to the object's original position
+                    itemPath.push([item.position.x, item.position.y, item.position.z]);
+                    //Make the set of animations and start them.
+                    var tweens = makeAnimationChain(item, itemPath);
+                    tweens[0].start();
+                }
             });
         }
-    }
+    };
 
     //Main entrypoint into the render loop -- initialize with "Room" scene.
     $scope.mainRender = function () {
