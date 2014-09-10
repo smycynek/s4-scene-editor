@@ -63,11 +63,25 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     $scope.orbitSpeed = 0;
     $scope.continueRender = true;
     $scope.statusMessage = "Initializing...";
+    $scope.editorDivisor = 31; //value to resize editor inline with graphics window.
     $scope.setResize = function () {
-        $scope.camera.aspect = window.innerWidth / window.innerHeight;
-        $scope.camera.updateProjectionMatrix();
-        $scope.renderer.setSize(window.innerWidth / 2.5, window.innerHeight / 2);
+        if ($scope.camera) {
+            $scope.camera.aspect = window.innerWidth / window.innerHeight;
+            $scope.camera.updateProjectionMatrix();
+            $scope.renderer.setSize(window.innerWidth / 2.5, window.innerHeight / 2);
+        }
+        if ($scope.editor) {
+            $scope.resizeEditor();
+        }
     };
+
+    $scope.resizeEditor = function () {
+        if ($scope.editor) {
+            $scope.editor.setOptions({maxLines: Math.floor(window.innerHeight / $scope.editorDivisor)});
+            $scope.editor.resize();
+        }
+    };
+
     $window.addEventListener('resize', $scope.setResize);
     //Create color values from RGB inputs
     $scope.colorByTriple = function (red, blue, green) {
@@ -278,6 +292,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
             $scope.statusMessage = "OK";
         } catch (err) {
             $scope.statusMessage = err.message;
+            $scope.editor.focus();
             return;
         }
         $scope.sceneItems = $scope.createSceneItems(parsed);
@@ -296,6 +311,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
         $scope.sceneItems.forEach(function (item) {
             $scope.scene.add(item);
         });
+      $scope.editor.focus();
     };
 
     //Create render context with reasonable default settings for a medium sized window in an
@@ -314,16 +330,6 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     //Basic scene template setup -- create scene, add lights, and return scene object
     $scope.newScene = function () {
         var scene = new THREE.Scene();
-       // var ambientLight = new THREE.AmbientLight(0x111111);
-        //scene.add(ambientLight);
-        // Simple directional lighting, just to show some highlights
-        //var directionalLight = new THREE.DirectionalLight(0x333333);
-        //directionalLight.position.set(50, 50, 50);
-        //directionalLight.castShadow = true;
-        //directionalLight.shadowCameraNear = 0.1;
-        //directionalLight.shadowCameraFar = 5;
-        //scene.add(directionalLight);
-
         var spotLight = new THREE.SpotLight(0xffffff);
         spotLight.position.set(20, 40, 20);
         spotLight.castShadow = true;
@@ -414,6 +420,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
                 }
             });
         }
+         $scope.editor.focus();
     };
 
     //Main entrypoint into the render loop -- initialize with "Room" scene.
@@ -428,13 +435,15 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     //editor.getSession().setUseWrapMode(true);
     editor.getSession().setTabSize(2);
 
+
 //Set the ace editor in the angular scope
     $scope.editor = editor;
     $scope.editor.getSession().on("change", function () {
-        $scope.$apply(function () { //This will not update automatically -- need to force update
+       $scope.$apply(function () { //This will not update automatically -- need to force update
             $scope.statusMessage = "Pending.";
-        });
+       });
     });
+    $scope.resizeEditor();
 
     $scope.chopQuotes = function (str) {
         return str.substring(1, str.length - 1);
@@ -481,6 +490,7 @@ threeNgApp.directive("range", function () {
             rangeControl.bind("change", function () {
                 scope.$apply(function () {
                     scope.orbitSpeed = rangeControl.val();
+                    scope.editor.focus();
                 });
             });
         }
