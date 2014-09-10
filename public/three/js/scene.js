@@ -259,19 +259,19 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     //Refresh JSON scene from server and place in web-page text view.
     $scope.showGeneralScene = function () {
         //Get JSON S4F data containing geometry and textures
-        $scope.showScene('/three/data/shapes.json');
+        $scope.showScene('data/shapes.json');
     };
 
     //Refresh JSON scene from server and place in web-page text view.
     $scope.showSimpleScene = function () {
         //Get JSON S4F data containing geometry and textures
-        $scope.showScene('/three/data/simple.json');
+        $scope.showScene('data/simple.json');
     };
 
      //Refresh JSON scene from server and place in web-page text view.
     $scope.showRoomScene = function () {
         //Get JSON S4F data containing geometry and textures
-        $scope.showScene('/three/data/rooms.json');
+        $scope.showScene('data/rooms.json');
     };
 
     ///Update the scene with the json text in the web-page text view.
