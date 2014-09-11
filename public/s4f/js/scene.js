@@ -1,15 +1,42 @@
 
 var threeNgApp = angular.module("threeNgApp", []);
 
-
 //Simple ThreeJS vector string formatter
 var vecToString = function (vec) {
     return vec.x.toString() + ", " + vec.y.toString() + ", " + vec.z.toString();
 };
 
-//Make a 2-second tween translation of an object between two points.
-var makeTween = function (object, startVec, endVec) {
-    var tween = new TWEEN.Tween({ x : startVec.x, y : startVec.y, z : startVec.z, theItem: object})
+
+
+
+//Main (and only) angular controller for the body of index.html
+threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
+    $scope.debug = false;
+    $scope.orbitSpeed = 0;
+    $scope.continueRender = true;
+    $scope.statusMessage = "Initializing...";
+    $scope.pendingMessage = "Pending...";
+    $scope.renderSizeDivisors = { width : 2.5, height : 2};
+    $scope.editorDivisor = 33; //value to resize editor inline with graphics window.
+    $scope.animationCount = 0;
+    $scope.incAnimationCount = function () {
+         $scope.$apply(function () {
+            $scope.animationCount = $scope.animationCount + 1;
+        });
+    }
+    $scope.decAnimationCount = function() {
+        $scope.$apply(function () {
+            $scope.animationCount = $scope.animationCount -1;
+        });
+    }
+    $scope.preventNewAnimation = function()
+    {
+        return ($scope.animationCount > 0)
+    }
+    
+    //Make a 2-second tween translation of an object between two points.
+    $scope.makeTween = function (object, startVec, endVec) {
+        var tween = new TWEEN.Tween({ x : startVec.x, y : startVec.y, z : startVec.z, theItem: object})
         .to({ x : endVec.x, y : endVec.y, z : endVec.z}, 2000)
         .easing(TWEEN.Easing.Linear.None)
         .onStart(function () {
@@ -18,6 +45,7 @@ var makeTween = function (object, startVec, endVec) {
             this.theItem.position.z = this.z;
             this.theItem.geometry.verticesNeedUpdate = true;
             this.theItem.geometry.normalsNeedUpdate = true;
+            $scope.incAnimationCount(); 
         })
         .onUpdate(function () {
             this.theItem.position.x = this.x;
@@ -30,12 +58,13 @@ var makeTween = function (object, startVec, endVec) {
         .onComplete(function () {
             this.theItem.geometry.verticesNeedUpdate = true;
             this.theItem.geometry.normalsNeedUpdate = true;
+            $scope.decAnimationCount(); 
         });
     return tween;
 };
 
-//Make a set of tween translation animations on an object in sequence from a list of points in a path
-var makeAnimationChain = function (object, pointList) {
+    //Make a set of tween translation animations on an object in sequence from a list of points in a path
+    $scope.makeAnimationChain = function (object, pointList) {
     var tweens = [];
     var idx, currentVector, nextVector, tween;
     if (pointList.length < 2) {
@@ -44,7 +73,7 @@ var makeAnimationChain = function (object, pointList) {
     for (idx = 0; idx !== pointList.length; idx = idx + 1) {
         currentVector = {x : pointList[idx][0], y : pointList[idx][1], z : pointList[idx][2]};
         nextVector = {x : pointList[idx + 1][0], y : pointList[idx + 1][1], z : pointList[idx + 1][2]};
-        tween = makeTween(object, currentVector, nextVector);
+        tween = $scope.makeTween(object, currentVector, nextVector);
         tweens.push(tween);
         if (idx > 0) {
             tweens[idx - 1].chain(tweens[idx]);
@@ -57,15 +86,7 @@ var makeAnimationChain = function (object, pointList) {
 };
 
 
-//Main (and only) angular controller for the body of index.html
-threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
-    $scope.debug = false;
-    $scope.orbitSpeed = 0;
-    $scope.continueRender = true;
-    $scope.statusMessage = "Initializing...";
-    $scope.pendingMessage = "Pending...";
-    $scope.renderSizeDivisors = { width : 2.5, height : 2};
-    $scope.editorDivisor = 33; //value to resize editor inline with graphics window.
+
     $scope.setResize = function () {
         if ($scope.camera) {
             $scope.camera.aspect = window.innerWidth / window.innerHeight;
@@ -313,6 +334,8 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
         $scope.sceneItems.forEach(function (item) {
             $scope.scene.add(item);
         });
+      TWEEN.removeAll();
+      $scope.animationCount = 0;
       $scope.editor.focus();
     };
 
@@ -403,7 +426,8 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
 
     //Animate all the objects in a scene from the animation-track data supplied in the json file.
     $scope.animateObjects = function () {
-
+        if ($scope.preventNewAnimation())
+            return;
         if ($scope.statusMessage === $scope.pendingMessage) {
             $scope.updateRender();
         }
@@ -421,7 +445,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
                     //Return to the object's original position
                     itemPath.push([item.position.x, item.position.y, item.position.z]);
                     //Make the set of animations and start them.
-                    var tweens = makeAnimationChain(item, itemPath);
+                    var tweens = $scope.makeAnimationChain(item, itemPath);
                     tweens[0].start();
                 }
             });
