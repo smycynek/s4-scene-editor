@@ -18,7 +18,7 @@
   #editor { 
     position: relative;
     height:450px;
-    width:600px;
+    width:105%;
     float:left;
   }
   </style>
@@ -26,18 +26,19 @@
 </head>
 
 <body ng-controller="RenderCtrl" data-ng-init="mainRender()">
-  <h1>Scene editor - Build 3D worlds with code using S4F*</h1>
-  <p><i>*Steve's Super Simple Scene Format</i></p>
+  <h1>Scene editor</h1>
+  <p><i>Build 3D worlds with code using <span title="Steve's Super Simple Scene Format">S4F*</span></i></p>
+
   <div style="margin-left: auto; margin-right: auto; width: 95%;">
     <table>
       <tr>
         <td style="padding-right: 12px;">
           <h3>Your Scene</h3>
-          <p>Use desktop browser.  Some mobile support.  <a href="faq.html#Safari">Safari Support</a>
+          <p>Desktop brower recommended. <a href="faq.html#Safari">Safari Support</a>
         </td>
         <td style="padding-left: 12px">
           <h3>Your Code</h3>
-          <p>Try editing a color or parameter or adding an additional shape. <a href="help.html">More help...</a></p>
+          <p>Try editing a color or parameter. <a href="help.html">More help...</a></p>
         </td>
       </tr>
       <tr>
@@ -52,8 +53,9 @@
       <tr>
         <td>  
     
-          <div class="btn-group">
-             <button type="button" class="btn btn-default" ng-click="animateObjects()" value="Animate">Animate</button>
+          <div>
+             <button type="button" class="btn btn-primary" ng-click="animateObjects()" value="Animate">Animate</button>       <span style="padding-left: 10px">   Camera orbit
+          <range></range>Speed:  {{orbitSpeed}} </span>
            </div>
   
         </td>
@@ -61,8 +63,7 @@
 
       <tr>
         <td>
-          <span>Camera orbit</span>
-          <range></range>Speed:  {{orbitSpeed}}
+
   
         </td>
       </tr>
@@ -74,14 +75,14 @@
         <td>
 
           <div class="btn-group">
-         <button type="button" class="btn btn-default" ng-click="showRoomScene()" value="Show Room sample">Room scene</button> 
-          <button type="button" class="btn btn-default"  ng-click="showGeneralScene()" value="Show general sample">General scene</button>
-          <button type="button" class="btn btn-default"  ng-click="showSimpleScene()" value="Show simple sample">Simple scene</button>
+         <button type="button" class="btn btn-inverse" ng-click="showRoomScene()" value="Show Room sample">Room scene</button> 
+          <button type="button" class="btn btn-inverse"  ng-click="showGeneralScene()" value="Show general sample">General scene</button>
+          <button type="button" class="btn btn-inverse"  ng-click="showSimpleScene()" value="Show simple sample">Simple scene</button>
       </div>
         </td>
         <td style="padding-left: 12px; vertical-align:bottom;">
           <div class="standalone">
-            <button class="btn btn-default" type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
+            <button class="btn btn-primary" type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
             <span>Code status: </span> <span style="color:red;">{{statusMessage}}</span>
           </div>
 
@@ -91,16 +92,10 @@
   </div>
   <h2>About</h2>
   <ul>
-    <li>
-      <a href="./data/rooms.json">Room Scene</a> |
-      <a href="./data/shapes.json">General Scene</a> |
-      <a href="./data/simple.json">Simple Scene</a>
-    </li>
     <li><a href="https://github.com/smycynek/s4-scene-editor">https://github.com/smycynek/s4-scene-editor</a> | <a href="mailto:sv@stevenvictor.net">sv@stevenvictor.net</a></li>
 
     <li><a href="faq.html">FAQ</a></li>
   </ul>
-
   <script src="js/scene.js" defer></script>
 
 </body>
