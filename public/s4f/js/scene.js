@@ -63,12 +63,14 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     $scope.orbitSpeed = 0;
     $scope.continueRender = true;
     $scope.statusMessage = "Initializing...";
-    $scope.editorDivisor = 31; //value to resize editor inline with graphics window.
+    $scope.pendingMessage = "Pending...";
+    $scope.renderSizeDivisors = { width : 2.5, height : 2};
+    $scope.editorDivisor = 33; //value to resize editor inline with graphics window.
     $scope.setResize = function () {
         if ($scope.camera) {
             $scope.camera.aspect = window.innerWidth / window.innerHeight;
             $scope.camera.updateProjectionMatrix();
-            $scope.renderer.setSize(window.innerWidth / 2.5, window.innerHeight / 2);
+            $scope.renderer.setSize(window.innerWidth / $scope.renderSizeDivisors.width, window.innerHeight / $scope.renderSizeDivisors.height);
         }
         if ($scope.editor) {
             $scope.resizeEditor();
@@ -319,7 +321,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     $scope.makeRenderer = function () {
         var renderer = new THREE.WebGLRenderer();
         renderer.shadowMapEnabled = true;
-        renderer.setSize(window.innerWidth / 2.5, window.innerHeight / 2);
+        renderer.setSize(window.innerWidth / $scope.renderSizeDivisors.width, window.innerHeight / $scope.renderSizeDivisors.height);
         document.getElementById("RenderWindow").appendChild(renderer.domElement);
         if ($scope.continueRender === false) {
             $scope.continueRender = true;
@@ -401,6 +403,10 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
 
     //Animate all the objects in a scene from the animation-track data supplied in the json file.
     $scope.animateObjects = function () {
+
+        if ($scope.statusMessage === $scope.pendingMessage) {
+            $scope.updateRender();
+        }
         if ($scope.sceneItems) {
             $scope.sceneItems.forEach(function (item) {
                 var itemPath = [];
@@ -440,7 +446,7 @@ threeNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     $scope.editor = editor;
     $scope.editor.getSession().on("change", function () {
        $scope.$apply(function () { //This will not update automatically -- need to force update
-            $scope.statusMessage = "Pending.";
+            $scope.statusMessage = $scope.pendingMessage;
        });
     });
     $scope.resizeEditor();

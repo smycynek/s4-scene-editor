@@ -18,7 +18,7 @@
   #editor { 
     position: relative;
     height:450px;
-    width:105%;
+    width:99%;
     float:left;
   }
   </style>
@@ -29,7 +29,7 @@
   <h1>Scene editor</h1>
   <p><i>Build 3D worlds with code using <span title="Steve's Super Simple Scene Format">S4F*</span></i></p>
 
-  <div style="margin-left: auto; margin-right: auto; width: 95%;">
+  <div style="margin-left: auto; margin-right: auto; width: 100%;">
     <table>
       <tr>
         <td style="padding-right: 12px;">
@@ -38,14 +38,14 @@
         </td>
         <td style="padding-left: 12px">
           <h3>Your Code</h3>
-          <p>Try editing a color or parameter. <a href="help.html">More help...</a></p>
+          <p>Try editing a color or parameter. <a href="help.html">Help...</a></p>
         </td>
       </tr>
       <tr>
         <td style="vertical-align:top;" >
           <div id="RenderWindow"> <span>Model Loading--please Wait...  <a href="faq.html#Safari">No graphics?</a></span></div>
         </td>
-        <td style="vertical-align:top; padding-left: 12px;" rowspan="4">
+        <td style="vertical-align:top; padding-left: 12px; width:80%" rowspan="4">
           <div id="editor">{"JSON S4F Content Loading":"Please Wait"}</div><br/>
  
         </td>
@@ -82,7 +82,7 @@
         </td>
         <td style="padding-left: 12px; vertical-align:bottom;">
           <div class="standalone">
-            <button class="btn btn-primary" type="button" ng-click="updateRender()" value="Update Model with your code">Update Model with your code</button>
+            <button class="btn btn-primary" type="button" ng-click="updateRender()" value="Update Model">Update Model</button>
             <span>Code status: </span> <span style="color:red;">{{statusMessage}}</span>
           </div>
 
@@ -91,8 +91,7 @@
     </table>
   </div>
 
-<hr/>
-<p>
+<p style="margin-top:10px";>
     <a href="https://github.com/smycynek/s4-scene-editor">https://github.com/smycynek/s4-scene-editor</a> | <a href="mailto:sv@stevenvictor.net">sv@stevenvictor.net</a> | <a href="faq.html">FAQ</a>
   </p>
 
