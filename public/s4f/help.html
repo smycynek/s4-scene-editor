@@ -11,7 +11,7 @@
 <h1>Working with the S4F Scene code</h1>
 <p>Note:  Being familiar with <a href="http://en.wikipedia.org/wiki/JSON">JSON</a>, basic 3D terms, and RBG colors will help when working with scenes, but here are the basics.</p>
 <p>
-The scene is defined in a JSON-based format called S4F (Steve's Super Simple Scene Format).  It is indeed simple for a 3D format -- it only defines a few shape types, positions, rotation, and color.  Positions and rotations are defined with X,Y,Z coordinates, and colors are defined with hex-based strings.  For example, 0xff0080 is 100% red, 0% green, and 50% blue (reddish-purple).
+The scene is defined in a JSON-based format called S4F (Steve's Super Simple Scene Format).  It is indeed simple for a 3D format -- it only defines a few shape types, positions, rotation, and color.  Animation tracks are optional.  Positions and rotations are defined with X,Y,Z coordinates, and colors are defined with hex-based strings.  For example, 0xff0080 is 100% red, 0% green, and 50% blue (reddish-purple).
 </p>
 <p>Try these steps on the main page (see screen shot numbed items below)</p>
 <ol>
@@ -34,7 +34,7 @@ The scene is defined in a JSON-based format called S4F (Steve's Super Simple Sce
   </p>
 
 <h2>Animations</h2>
-<p>Try editing some of the points in 3d space in an animation track in the 'AnimationTracks' section of the scene, click 'Update,' and click 'Animate.' Also try adding, removing, and changing the track assignments of individual objects, e.g. 'AnimationTrack' = 'Track2'</p>
+<p>Try editing some of the points in 3d space in an animation track in the 'AnimationTracks' section of the scene, and click 'Animate.' Also try adding, removing, and changing the track assignments of individual objects, e.g. 'AnimationTrack' = 'Track2'</p>
 
 <h2>My screen went black! (Error handling)</h2>
 <p>
