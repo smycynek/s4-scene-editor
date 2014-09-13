@@ -15,6 +15,8 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     $scope.renderSizeDivisors = { width : 2.5, height : 2};
     $scope.editorDivisor = 33; //value to resize editor inline with graphics window.
     $scope.animationCount = 0;
+
+    //Increment animation count
     $scope.incAnimationCount = function () {
         $scope.$apply(function () {
             $scope.animationCount = $scope.animationCount + 1;
@@ -24,16 +26,33 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     //A reference counting system to check for total # of animations running
     //in the scene at a given time.
 
-    //Increment animation count
+    //Decrement animation count
     $scope.decAnimationCount = function () {
         $scope.$apply(function () {
             $scope.animationCount = $scope.animationCount - 1;
         });
     };
-    //Decrement animation count
+    //Return true if a new animation should not be started.
     $scope.preventNewAnimation = function () {
-        return ($scope.animationCount > 0);
+        if ($scope.animationCount > 0) {
+                return true;
+        }
+        else { 
+            return false;
+        }
     };
+
+    //Get text to display in the 'Animate' button, depending on whether new animations are currently allowed.
+    $scope.getAnimationButtonText = function () {
+        if ($scope.preventNewAnimation()) {
+            return "Animating.......";
+        }
+        else {
+            return "Run animation";
+        }
+    };
+
+
     //Make a 2-second tween translation of an object between two points.
     $scope.makeTween = function (object, startVec, endVec) {
         var tween = new TWEEN.Tween({ x : startVec.x, y : startVec.y, z : startVec.z, theItem: object})
@@ -312,7 +331,7 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
         var parsed = "";
         try {
             parsed = JSON.parse(text);
-            $scope.statusMessage = "OK";
+            $scope.statusMessage = "Updated";
         } catch (err) {
             $scope.statusMessage = err.message;
             $scope.editor.focus();
@@ -516,7 +535,7 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
 s4fNgApp.directive("range", function () {
     return {
         restrict: "E",
-        template: '<input type="range" min="-10" max="10" value="0" ng-model="orbitSpeed" style="width:100px; display:inline"/>',
+        template: '<input type="range" title="Change the orbit speed and direction of the camera." min="-10" max="10" value="0" ng-model="orbitSpeed" style="width:100px; display:inline"/>',
         link: function (scope, element) {
             var rangeControl = element.find("input");
             rangeControl.bind("change", function () {
