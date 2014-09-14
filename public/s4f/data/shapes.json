@@ -15,7 +15,7 @@
       "Y":0,
       "Z":0
    },
-   "Color": "0x6624233",  
+   "Color": "0x662423",  
    "Parameters" :
    {
       "Radius" : 0.5, 
@@ -83,7 +83,7 @@
       "Y":0,
       "Z":0
    },
-   "Color": "0x919933",
+   "Color": "0xbdb76b",
    "Parameters" : {
    "Width": 7, 
    "Height": 7  
