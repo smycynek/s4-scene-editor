@@ -12,6 +12,22 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     $scope.editorDivisor = 33; //value to resize editor inline with graphics window.
     $scope.animationCount = 0;
 
+    //There is no good way to detect this directly, but for now, if a device supports
+    //touch, it is likely mobile and has a soft keyboard.
+    //We check for this because on mobile, we don't want to focus on the text editor and
+    //pop up the keyboard automatically -- it's very disruputive to the mobile layout.
+    //
+    //On desktop devices, however, we do want to focus to remain in the text editor as much
+    //as possible for easy editing.
+    $scope.hasSoftKeyboard = function() {
+       try {
+           document.createEvent("TouchEvent");
+           return true;
+        } catch (e) {
+           return false;
+        }    
+    };
+
     //A reference counting system to check for total # of animations running
     //in the scene at a given time.
 
@@ -174,7 +190,9 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
             $scope.statusMessage = "Updated";
         } catch (err) {
             $scope.statusMessage = err.message;
-            $scope.editor.focus();
+            if (!$scope.hasSoftKeyboard()) {
+                $scope.editor.focus();
+            }
             return;
         }
         $scope.sceneItems = $scope.createSceneItems(parsed);
@@ -195,7 +213,9 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
         });
         TWEEN.removeAll();
         $scope.animationCount = 0;
-        $scope.editor.focus();
+        if (!$scope.hasSoftKeyboard()) {
+            $scope.editor.focus();
+        }
     };
 
     //Create render context with reasonable default settings for a medium sized window in an
@@ -283,7 +303,9 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
                 }
             });
         }
-        $scope.editor.focus();
+        if (!$scope.hasSoftKeyboard()) {
+            $scope.editor.focus();
+        }
     };
 
     //Main entrypoint into the render loop -- initialize with "Room" scene.
@@ -343,7 +365,9 @@ s4fNgApp.directive("range", function () {
             rangeControl.bind("change", function () {
                 scope.$apply(function () {
                     scope.orbitSpeed = rangeControl.val();
-                    scope.editor.focus();
+                    if (!$scope.hasSoftKeyboard()) {
+                        scope.editor.focus();
+                    }
                 });
             });
         }
