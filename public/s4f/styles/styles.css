@@ -3,7 +3,7 @@
     display: block;
   }
 
-h1,h2,h3,h4,h5,h6,td,th,p,div,li,body
+h1,h2,h3,h4,h5,h6,td,th,p,div,li,body,dl
 {
   margin-left: 7px;
 }

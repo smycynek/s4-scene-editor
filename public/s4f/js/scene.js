@@ -1,5 +1,4 @@
 //main Angular app -- requires sceneLib.js and geometryLib.js (and lib folder)
-
 var s4fNgApp = angular.module("s4fNgApp", []);
 
 //Main (and only) angular controller for the body of index.html
@@ -20,12 +19,12 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     //On desktop devices, however, we do want to focus to remain in the text editor as much
     //as possible for easy editing.
     $scope.hasSoftKeyboard = function() {
-       try {
-           document.createEvent("TouchEvent");
-           return true;
+        try {
+            document.createEvent("TouchEvent");
+            return true;
         } catch (e) {
-           return false;
-        }    
+            return false;
+        }
     };
 
     //A reference counting system to check for total # of animations running
@@ -50,7 +49,7 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
                 return true;
         } else {
             return false;
-            }    
+        }
     };
 
     //Get text to display in the 'Animate' button, depending on whether new animations are currently allowed.
@@ -59,7 +58,7 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
             return "Animating.......";
         } else {
             return "Run animation";
-            }
+        }
     };
 
     //Make a 2-second tween translation of an object between two points.
@@ -332,6 +331,16 @@ s4fNgApp.controller("RenderCtrl", function ($scope, $window, $http) {
     $scope.resizeEditor();
 
 
+    //scroll function handlers --mostly for touch/mobile users.
+    $scope.scrollDown = function() {
+        $scope.editor.selection.moveCursorDown();
+        $scope.editor.clearSelection();
+    };
+
+    $scope.scrollUp = function() {
+        $scope.editor.selection.moveCursorUp();
+        $scope.editor.clearSelection();
+    };
 
     //Get the text in the ACE editor -- option to remove leading and trailing quote marks
     $scope.getText = function (chopQuotes) {

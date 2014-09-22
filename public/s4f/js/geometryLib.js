@@ -68,6 +68,7 @@ var makeCylinder = function (radiusTop, radiusBottom, height, verticalSegments, 
 var makeCylinderFromJson = function (jsonItem) {
     var geometry = makeCylinder(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, new color(jsonItem.Data.Color));
     basicInit(geometry, jsonItem);
+    return geometry;
 };
 
 //Same as for box, but for cone
