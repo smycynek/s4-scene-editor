@@ -1,6 +1,7 @@
 extends layout
 
 block content
-  h1= title
+  h1 Welcome: #{title}
   p
-     a(href="./s4f/") S4F Scene Editor
+    | Project:  
+    a(href= projectUrl)= projectName

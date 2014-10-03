@@ -3,7 +3,12 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Server Template' });
+  var homepageData = {
+      title : 'Server Template', 
+      projectName : 'S4F Editor', 
+      projectUrl : './s4f/'
+  };
+  res.render('index', homepageData);
 });
 
 module.exports = router;
