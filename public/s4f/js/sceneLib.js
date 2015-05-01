@@ -26,12 +26,19 @@ var formatCode = function (str, chop) {
 
 //Create color values from RGB inputs
 var colorByTriple = function (red, green, blue) {
-    this.color = blue + (green << 8) + (red << 16);
+   var newColor= {
+         get color () {return  blue + (green << 8) + (red << 16);}
+    };
+    return newColor;
+   
 };
 
 // Create color values from hex strings
-var color = function (hexValue) {
-    this.color = parseInt(hexValue, 16);
+var colorByHex = function (hexValue) {
+ var newColor = {
+         get color () {return  parseInt(hexValue, 16);}
+    };
+    return newColor;
 };
 
 //Create a new color with RGB values scaled by a factor.
@@ -43,7 +50,7 @@ var scaleColor = function (color, scale) {
     green = (color.color & 0x00ff00) >> 8;
     blue =  (color.color & 0x0000ff);
 
-    return new colorByTriple(Math.floor(red * scale), Math.floor(blue * scale), Math.floor(green * scale));
+    return colorByTriple(Math.floor(red * scale), Math.floor(blue * scale), Math.floor(green * scale));
 };
 
 //Set basic translation, rotation, and other parameters on an object from parsed JSON input

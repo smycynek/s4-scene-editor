@@ -9,7 +9,7 @@ var makeBox = function (length, width, depth, color) {
 
 //Make a box from S4F JSON data 
 var makeBoxFromJson = function (jsonItem) {
-    var geometry = makeBox(jsonItem.Data.Parameters.Length, jsonItem.Data.Parameters.Width, jsonItem.Data.Parameters.Depth, new color(jsonItem.Data.Color));
+    var geometry = makeBox(jsonItem.Data.Parameters.Length, jsonItem.Data.Parameters.Width, jsonItem.Data.Parameters.Depth, colorByHex(jsonItem.Data.Color));
     basicInit(geometry, jsonItem);
     return geometry;
 };
@@ -38,7 +38,7 @@ var makeExtrusion = function (profile, depth, color) {
 
 //Make an extrusion from S4F JSON data 
 var makeExtrusionFromJson = function (jsonItem) {
-    var geometry = makeExtrusion(jsonItem.Data.Parameters.Profile, jsonItem.Data.Parameters.Depth, new color(jsonItem.Data.Color));
+    var geometry = makeExtrusion(jsonItem.Data.Parameters.Profile, jsonItem.Data.Parameters.Depth, colorByHex(jsonItem.Data.Color));
     basicInit(geometry, jsonItem);
     return geometry;
 };
@@ -52,7 +52,7 @@ var makePlane = function (width, height, color) {
 
 //Make a plane from S4F JSON data 
 var makePlaneFromJson = function (jsonItem) {
-    var geometry = makePlane(jsonItem.Data.Parameters.Width, jsonItem.Data.Parameters.Height, new color(jsonItem.Data.Color));
+    var geometry = makePlane(jsonItem.Data.Parameters.Width, jsonItem.Data.Parameters.Height, colorByHex(jsonItem.Data.Color));
     basicInit(geometry, jsonItem);
     return geometry;
 };
@@ -66,7 +66,7 @@ var makeCylinder = function (radiusTop, radiusBottom, height, verticalSegments, 
 
 //Same as for box, but for cylinder
 var makeCylinderFromJson = function (jsonItem) {
-    var geometry = makeCylinder(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, new color(jsonItem.Data.Color));
+    var geometry = makeCylinder(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, colorByHex(jsonItem.Data.Color));
     basicInit(geometry, jsonItem);
     return geometry;
 };
@@ -79,7 +79,7 @@ var makeCone = function (radiusBottom, height, verticalSegments, horizontalSegme
 };
 
 var makeConeFromJson = function (jsonItem) {
-    var geometry = makeCone(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, new color(jsonItem.Data.Color));
+    var geometry = makeCone(jsonItem.Data.Parameters.Radius, jsonItem.Data.Parameters.Height, 40, 40, false, colorByHex(jsonItem.Data.Color));
     basicInit(geometry, jsonItem);
     return geometry;
 };
